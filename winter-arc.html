@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Winter Arc — Command Center</title>
+<meta name="description" content="Winter Arc command center: daily non-negotiables, XP & ranks, monk-mode streak, penalties, goals and journal." />
+<meta name="theme-color" content="#05050A" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Winter Arc" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  if (typeof tailwind !== 'undefined') {
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { obsidian: '#05050A', panel: '#0B0B14', line: '#1A1A2B', ice: '#38BDF8', gold: '#F59E0B', blood: '#EF4444' },
+          fontFamily: {
+            hud: ['"Chakra Petch"', '"Arial Narrow"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    };
+  }
+</script>
+
+<style>
+  [x-cloak] { display: none !important; }
+  html, body { background: #05050A; }
+  body {
+    color: #E2E8F0;
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 40% at 50% -10%, rgba(56,189,248,.10), transparent 70%),
+      linear-gradient(rgba(56,189,248,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56,189,248,.025) 1px, transparent 1px);
+    background-size: 100% 100%, 28px 28px, 28px 28px;
+    background-attachment: fixed;
+  }
+  .font-hud { font-family: 'Chakra Petch', 'Arial Narrow', sans-serif; }
+  .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  input, select, textarea, button { font: inherit; }
+  input, select, textarea { font-size: 16px; }
+  button { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  .tabular { font-variant-numeric: tabular-nums; }
+  .press:active { transform: scale(.975); }
+
+  .panel { position: relative; background: rgba(11,11,20,.92); border: 1px solid #1A1A2B; border-radius: 14px; padding: 1rem; }
+  .hud::before, .hud::after { content: ''; position: absolute; width: 12px; height: 12px; pointer-events: none; }
+  .hud::before { top: -1px; left: -1px; border-top: 2px solid #38BDF8; border-left: 2px solid #38BDF8; border-top-left-radius: 14px; }
+  .hud::after { bottom: -1px; right: -1px; border-bottom: 2px solid #38BDF8; border-right: 2px solid #38BDF8; border-bottom-right-radius: 14px; }
+  .hud-gold::before { border-color: #F59E0B; }
+  .hud-gold::after { border-color: #F59E0B; }
+  .label { font-family: 'Chakra Petch', sans-serif; font-size: 10.5px; letter-spacing: .24em; text-transform: uppercase; color: #64748B; font-weight: 600; }
+  .tag { display: inline-flex; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: #131322; color: #94A3B8; letter-spacing: .06em; white-space: nowrap; }
+  .tag-ice { background: rgba(56,189,248,.12); color: #38BDF8; }
+  .tag-gold { background: rgba(245,158,11,.14); color: #F59E0B; }
+  .tag-red { background: rgba(239,68,68,.14); color: #F87171; }
+  .field { width: 100%; height: 3rem; border-radius: .7rem; background: #0F0F1C; border: 1px solid #1A1A2B; padding: 0 .85rem; color: #F1F5F9; font-weight: 600; outline: none; }
+  .field:focus { border-color: #38BDF8; }
+  textarea.field { height: auto; padding: .75rem .85rem; font-weight: 400; line-height: 1.45; resize: none; }
+  input[type="date"].field { color-scheme: dark; }
+  .bar { height: 10px; border-radius: 999px; background: #121222; overflow: hidden; position: relative; }
+  .bar > i { display: block; height: 100%; border-radius: 999px; transition: width .6s cubic-bezier(.2,.8,.2,1); }
+  .ice-fill { background: linear-gradient(90deg, #0EA5E9, #38BDF8 60%, #BAE6FD); box-shadow: 0 0 12px rgba(56,189,248,.45); }
+  .gold-fill { background: linear-gradient(90deg, #B45309, #F59E0B 60%, #FCD34D); box-shadow: 0 0 12px rgba(245,158,11,.4); }
+
+  .lv0 { background: #10121C; }
+  .lv1 { background: rgba(56,189,248,.18); }
+  .lv2 { background: rgba(56,189,248,.36); }
+  .lv3 { background: rgba(56,189,248,.60); }
+  .lv4 { background: #38BDF8; }
+  .lv5 { background: #F59E0B; box-shadow: 0 0 6px rgba(245,158,11,.6); }
+  .lvf { background: transparent; border: 1px dashed #1E2033; }
+  .lvx { background: #0A0A12; opacity: .5; }
+
+  .glow-ice { text-shadow: 0 0 18px rgba(56,189,248,.45); }
+  .glow-gold { text-shadow: 0 0 18px rgba(245,158,11,.5); }
+  @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, 10px) scale(.9); } 15% { opacity: 1; transform: translate(-50%, 0) scale(1.05); } 100% { opacity: 0; transform: translate(-50%, -70px) scale(1); } }
+  .xpfloat { position: fixed; left: 50%; animation: floatUp 1.3s ease-out forwards; pointer-events: none; }
+  @keyframes pop { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+  .pop { animation: pop .35s ease-out; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+  .blink { animation: blink 1.2s ease-in-out infinite; }
+  @keyframes shine { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+  .shine { background: linear-gradient(90deg, #F59E0B, #FDE68A, #F59E0B); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 3s linear infinite; }
+</style>
+
+<script>
+/* =========================================================================
+   WINTER ARC — constants & helpers
+   ========================================================================= */
+const STORAGE_KEY = 'winterarc.data.v1';
+const XP_K = 20;               // cumulative XP for level L = XP_K * (L-1)^2
+const AUTO_PENALTY = 20;       // per missed CORE habit on a closed day
+const PERFECT_BONUS = 50;      // 13/13 day
+const JOURNAL_BONUS = 15;      // both Mirror questions answered
+const STREAK_BONUS = 2;        // × streak length (capped at 30 days) on days that hold the line
+const EXAM_XP = 200, JUZ_XP = 150, FUND_XP_PER_1000 = 100;
+
+const PILLARS = [
+  { id: 'spirit', name: 'Spiritual & Mind', bs: 'Duhovni mir i fokus', icon: '☾', habits: [
+    { id: 'fajr',    t: 'Fajr (Sabah) prayer on time + 0 minutes of phone in bed', xp: 30, core: true },
+    { id: 'salah',   t: 'All 5 daily prayers completed on time', xp: 30, core: true },
+    { id: 'hifz',    t: 'Quran Hifz: memorize/review minimum 5 lines after Fajr', xp: 25 },
+    { id: 'turkish', t: '15 minutes of Turkish language practice', xp: 15 }
+  ] },
+  { id: 'body', name: 'Physical & Health', bs: 'Tijelo i energija', icon: '⚔', habits: [
+    { id: 'gym',       t: 'Heavy gym session OR active recovery (10,000 steps)', xp: 30, core: true },
+    { id: 'nutrition', t: 'Clean nutrition: high protein, 3 L water, ZERO junk food/sugar', xp: 20 },
+    { id: 'groom',     t: 'Grooming & posture check (skin care, sharp posture, cold shower)', xp: 10 },
+    { id: 'sleep',     t: 'In bed by 23:00 (7.5+ hours of sleep)', xp: 20 }
+  ] },
+  { id: 'empire', name: 'Intellect & Empire', bs: 'Mašinstvo & Inporta biznis', icon: '⚙', habits: [
+    { id: 'study',    t: '90 min deep-focus study: Mechanical Engineering exams / SolidWorks', xp: 30 },
+    { id: 'business', t: '90 min high-leverage work on inporta.ba (webshop, B2B outreach, catalog)', xp: 30 }
+  ] },
+  { id: 'detox', name: 'Dopamine Detox & Social Authority', bs: 'Čelični karakter', icon: '◆', habits: [
+    { id: 'screen',  t: 'Screen time strictly under 2 hours (ZERO TikTok, ZERO doomscrolling)', xp: 25, core: true },
+    { id: 'nosimp',  t: 'Zero simping / zero chasing validation from women / focus on mission', xp: 20, core: true },
+    { id: 'assert',  t: 'Assertiveness: speak less, hold eye contact, ask/answer 1 question at university', xp: 15 }
+  ] }
+];
+const HABITS = PILLARS.reduce((a, p) => a.concat(p.habits), []);
+const CORE_IDS = HABITS.filter(h => h.core).map(h => h.id);
+const MAX_DAILY_XP = HABITS.reduce((a, h) => a + h.xp, 0);
+
+const PENALTIES = [
+  { id: 'scroll',  t: 'TikTok / doomscroll relapse',         xp: 75, streak: true,  icon: '📱' },
+  { id: 'simp',    t: 'Simped / chased validation',          xp: 75, streak: true,  icon: '🎭' },
+  { id: 'relapse', t: 'Other dopamine relapse',              xp: 75, streak: true,  icon: '⚠' },
+  { id: 'prayer',  t: 'Missed a prayer on time',             xp: 50, streak: false, icon: '🕌' },
+  { id: 'junk',    t: 'Junk food / sugar binge',             xp: 40, streak: false, icon: '🍩' },
+  { id: 'late',    t: 'Phone in bed / up past midnight',     xp: 30, streak: false, icon: '🌙' },
+  { id: 'skip',    t: 'Skipped a planned session',           xp: 30, streak: false, icon: '⏸' }
+];
+
+const RANKS = [
+  { min: 1,  name: 'Drifter' },
+  { min: 5,  name: 'Awakened' },
+  { min: 10, name: 'Disciplined' },
+  { min: 15, name: 'Sentinel' },
+  { min: 20, name: 'Monk' },
+  { min: 25, name: 'Ironclad' },
+  { min: 30, name: 'Ghost' },
+  { min: 40, name: 'Warlord' },
+  { min: 50, name: 'Unrecognizable' }
+];
+
+const IRON_LAWS = [
+  'Never put anyone on a pedestal.',
+  'Respect is earned through self-respect.',
+  'Action cures sadness. Move first, feel better later.',
+  'Discipline is choosing what you want most over what you want now.',
+  'Speak less. Let results do the talking.',
+  'Your phone is a tool, not your master.',
+  'Win Fajr and you win the day.',
+  'Tie your camel, then trust in Allah.',
+  'Missed a day? Never miss twice.',
+  'Build in silence. Announce nothing.',
+  'Comfort is the enemy of the mission.',
+  'Guard your eyes, your heart and your time.',
+  'Validation is a drug. Stay sober.',
+  'The version of you in August is watching what you do today.',
+  'No zero days — the minimum still counts.',
+  'Pressure is a privilege. Embrace the cold.'
+];
+
+const FUND_SOURCES = ['Inporta', 'Freelancing', 'Other'];
+
+const pad2 = n => String(n).padStart(2, '0');
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+function ymd(d) { const x = new Date(d); return x.getFullYear() + '-' + pad2(x.getMonth() + 1) + '-' + pad2(x.getDate()); }
+function parseYmd(s) { const p = String(s).split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); }
+function addDays(k, n) { const d = parseYmd(k); d.setDate(d.getDate() + n); return ymd(d); }
+function daysBetween(a, b) { return Math.round((parseYmd(b) - parseYmd(a)) / 86400000); }
+function startOfWeekKey(k) { const d = parseYmd(k); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return ymd(d); }
+function num(v) { if (v === null || v === undefined || v === '') return NaN; const n = parseFloat(String(v).replace(',', '.')); return Number.isFinite(n) ? n : NaN; }
+function isKey(s) { return /^\d{4}-\d{2}-\d{2}$/.test(String(s)) && !isNaN(parseYmd(s).getTime()); }
+function nextOccurrence(month, day) {
+  const now = new Date();
+  let d = new Date(now.getFullYear(), month - 1, day);
+  if (d <= now) d = new Date(now.getFullYear() + 1, month - 1, day);
+  return ymd(d);
+}
+
+function levelInfo(xp) {
+  const x = Math.max(0, Math.floor(xp));
+  const lvl = Math.floor(Math.sqrt(x / XP_K)) + 1;
+  const cur = XP_K * (lvl - 1) * (lvl - 1);
+  const next = XP_K * lvl * lvl;
+  return { lvl, cur, next, into: x - cur, need: next - cur, pct: Math.min(100, ((x - cur) / (next - cur)) * 100) };
+}
+function rankFor(lvl) { let r = RANKS[0]; for (const x of RANKS) if (lvl >= x.min) r = x; return r; }
+function nextRankFor(lvl) { return RANKS.find(x => x.min > lvl) || null; }
+function xpForLevel(lvl) { return XP_K * (lvl - 1) * (lvl - 1); }
+
+function blankDay() { return { h: {}, penalties: [], journal: { win: '', weak: '', mission: '' } }; }
+
+function defaultData() {
+  const today = ymd(new Date());
+  return {
+    version: 1,
+    settings: {
+      name: 'Operator',
+      arcStart: today,
+      arcEnd: nextOccurrence(5, 1),
+      goalDate: nextOccurrence(8, 1),
+      fundTarget: 12000,
+      juzGoal: 30,
+      sound: true,
+      vibrate: true,
+      lastBackup: null
+    },
+    days: {},
+    fund: [],
+    juz: Array(30).fill(0),
+    exams: [
+      { id: uid(), name: 'ME210 — Strength of Materials', passed: false, grade: '' },
+      { id: uid(), name: 'ENS208 — Introduction to Manufacturing Systems', passed: false, grade: '' }
+    ],
+    lastLevelSeen: 1,
+    lastVerdict: addDays(today, -1)
+  };
+}
+
+function normalizeData(d) {
+  if (!d || typeof d !== 'object' || typeof d.days !== 'object' || d.days === null) throw new Error('Not a Winter Arc backup');
+  const base = defaultData();
+  const out = {
+    version: 1,
+    settings: Object.assign({}, base.settings, (d.settings && typeof d.settings === 'object') ? d.settings : {}),
+    days: {}, fund: [], juz: Array(30).fill(0), exams: [],
+    lastLevelSeen: Math.max(1, Number(d.lastLevelSeen) || 1),
+    lastVerdict: isKey(d.lastVerdict) ? d.lastVerdict : base.lastVerdict
+  };
+  const s = out.settings;
+  ['arcStart', 'arcEnd', 'goalDate'].forEach(k => { if (!isKey(s[k])) s[k] = base.settings[k]; });
+  s.fundTarget = Math.max(1, num(s.fundTarget) || 12000);
+  s.juzGoal = Math.min(30, Math.max(1, Math.round(num(s.juzGoal) || 30)));
+  s.name = String(s.name || 'Operator').slice(0, 24);
+  s.sound = s.sound !== false; s.vibrate = s.vibrate !== false;
+  const ids = new Set(HABITS.map(h => h.id));
+  Object.keys(d.days).forEach(k => {
+    if (!isKey(k)) return;
+    const e = d.days[k] || {};
+    const day = blankDay();
+    if (e.h && typeof e.h === 'object') Object.keys(e.h).forEach(id => { if (ids.has(id) && e.h[id]) day.h[id] = true; });
+    if (Array.isArray(e.penalties)) e.penalties.forEach(p => {
+      if (!p) return;
+      const xp = Math.max(0, Math.round(num(p.xp) || 0));
+      if (!xp) return;
+      day.penalties.push({ id: String(p.id || uid()), type: String(p.type || 'custom'), t: String(p.t || 'Penalty'), xp, streak: !!p.streak, note: String(p.note || ''), ts: p.ts || new Date().toISOString() });
+    });
+    if (e.journal && typeof e.journal === 'object') {
+      day.journal.win = String(e.journal.win || ''); day.journal.weak = String(e.journal.weak || ''); day.journal.mission = String(e.journal.mission || '');
+    }
+    out.days[k] = day;
+  });
+  if (Array.isArray(d.fund)) d.fund.forEach(f => {
+    const amount = Math.round((num(f && f.amount) || 0) * 100) / 100;
+    if (!f || !amount || !isKey(f.date)) return;
+    out.fund.push({ id: String(f.id || uid()), date: f.date, amount, source: FUND_SOURCES.includes(f.source) ? f.source : 'Other', note: String(f.note || '') });
+  });
+  if (Array.isArray(d.juz)) for (let i = 0; i < 30; i++) { const v = Number(d.juz[i]); out.juz[i] = v === 1 || v === 2 ? v : 0; }
+  if (Array.isArray(d.exams)) d.exams.forEach(x => { if (x && x.name) out.exams.push({ id: String(x.id || uid()), name: String(x.name).slice(0, 80), passed: !!x.passed, grade: String(x.grade || '').slice(0, 10) }); });
+  return out;
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultData();
+    return normalizeData(JSON.parse(raw));
+  } catch (e) { console.warn('Winter Arc: could not read saved data', e); return defaultData(); }
+}
+
+/* Every XP number is derived from the log — never stored — so editing a past day stays consistent. */
+function computeAll(data, today) {
+  const s = data.settings;
+  const res = { days: {}, daily: 0, earned: 0, bonus: 0, penalties: 0, auto: 0, goalXp: 0, total: 0,
+    streak: 0, longest: 0, perfect: 0, closed: 0, avgPct: 0, relapses: 0 };
+  let streak = 0, sumPct = 0, guard = 0;
+  for (let k = s.arcStart; k <= today && guard < 4000; k = addDays(k, 1), guard++) {
+    const e = data.days[k] || null;
+    const h = (e && e.h) || {};
+    let earned = 0, done = 0, coreDone = 0;
+    HABITS.forEach(x => { if (h[x.id]) { earned += x.xp; done++; if (x.core) coreDone++; } });
+    const pens = (e && e.penalties) || [];
+    const penXp = pens.reduce((a, p) => a + (Number(p.xp) || 0), 0);
+    const relapse = pens.some(p => p.streak);
+    const coreOk = coreDone === CORE_IDS.length;
+    const holds = coreOk && !relapse;
+    const isToday = k === today;
+    const auto = isToday ? 0 : (CORE_IDS.length - coreDone) * AUTO_PENALTY;
+    if (holds) streak++;
+    else if (!isToday || relapse) streak = 0;
+    const streakBonus = holds ? Math.min(streak, 30) * STREAK_BONUS : 0;
+    const perfect = done === HABITS.length ? PERFECT_BONUS : 0;
+    const j = e && e.journal;
+    const jb = (j && j.win && j.win.trim() && j.weak && j.weak.trim()) ? JOURNAL_BONUS : 0;
+    const net = earned + perfect + jb + streakBonus - penXp - auto;
+    const pct = done / HABITS.length;
+    res.days[k] = { pct, done, coreDone, earned, perfect, jb, streakBonus, penXp, auto, net, relapse, holds, streak, isToday };
+    res.earned += earned; res.bonus += perfect + jb + streakBonus; res.penalties += penXp; res.auto += auto; res.daily += net;
+    if (relapse) res.relapses++;
+    if (perfect) res.perfect++;
+    if (!isToday) { res.closed++; sumPct += pct; }
+    if (streak > res.longest) res.longest = streak;
+  }
+  res.streak = streak;
+  res.avgPct = res.closed ? sumPct / res.closed : 0;
+  const examXp = data.exams.filter(x => x.passed).length * EXAM_XP;
+  const juzXp = data.juz.filter(v => v === 2).length * JUZ_XP;
+  const fundTotal = data.fund.reduce((a, f) => a + f.amount, 0);
+  const fundXp = Math.max(0, Math.floor(fundTotal / 1000)) * FUND_XP_PER_1000;
+  res.goalXp = examXp + juzXp + fundXp;
+  res.fundTotal = fundTotal;
+  res.total = res.daily + res.goalXp;
+  return res;
+}
+
+/* ---------- Audio / haptics ---------- */
+let audioCtx = null;
+function unlockAudio() {
+  try {
+    if (!audioCtx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) audioCtx = new AC(); }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  } catch (e) { /* ignore */ }
+}
+function tone(freq, dur, when, vol, type) {
+  if (!audioCtx) return;
+  try {
+    const t = audioCtx.currentTime + (when || 0);
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = type || 'triangle'; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol || 0.2, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + dur + 0.03);
+  } catch (e) { /* ignore */ }
+}
+function vibrate(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) { /* ignore */ } }
+
+/* ---------- PWA bootstrap ---------- */
+function setupPWA() {
+  let png = '';
+  try {
+    const c = document.createElement('canvas'); c.width = c.height = 512;
+    const g = c.getContext('2d');
+    g.fillStyle = '#05050A'; g.fillRect(0, 0, 512, 512);
+    g.strokeStyle = '#38BDF8'; g.lineWidth = 26; g.lineCap = 'round'; g.lineJoin = 'round';
+    g.beginPath(); g.moveTo(96, 360); g.lineTo(196, 170); g.lineTo(256, 270); g.lineTo(316, 170); g.lineTo(416, 360); g.stroke();
+    g.fillStyle = '#F59E0B'; g.beginPath(); g.arc(256, 112, 30, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#38BDF8'; g.fillRect(96, 400, 320, 16);
+    png = c.toDataURL('image/png');
+  } catch (e) { /* ignore */ }
+  const addLink = (rel, href) => { const l = document.createElement('link'); l.rel = rel; l.href = href; document.head.appendChild(l); };
+  if (png) { addLink('icon', png); addLink('apple-touch-icon', png); }
+  if (location.protocol === 'http:' || location.protocol === 'https:') {
+    const base = location.href.split('#')[0].split('?')[0];
+    const manifest = {
+      name: 'Winter Arc — Command Center', short_name: 'Winter Arc', start_url: base,
+      scope: base.substring(0, base.lastIndexOf('/') + 1), display: 'standalone', orientation: 'portrait',
+      background_color: '#05050A', theme_color: '#05050A',
+      icons: png ? [{ src: png, sizes: '512x512', type: 'image/png', purpose: 'any' }] : []
+    };
+    addLink('manifest', 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest)));
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => { /* optional */ });
+  }
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* ignore */ }
+}
+
+/* =========================================================================
+   Alpine component
+   ========================================================================= */
+const MEMO = { key: '', val: null };
+let saveTimer = null;
+
+function winterArc() {
+  return {
+    tab: 'hq',
+    data: loadData(),
+    rev: 0,
+    now: Date.now(),
+    sel: ymd(new Date()),
+    pillars: PILLARS,
+    penaltyTypes: PENALTIES,
+    ironLaws: IRON_LAWS,
+    fundSources: FUND_SOURCES,
+    heatMode: '30',
+    modal: null,          // 'penalty' | 'confirm' | 'rankup' | 'verdict' | 'laws'
+    confirmBox: { title: '', text: '', okText: 'OK', danger: false, onOk: null },
+    penaltyDraft: { type: null, note: '' },
+    rankUp: null,
+    verdict: null,
+    toastMsg: '', toastTimer: null,
+    floats: [],
+    collapsed: {},
+    jForm: { win: '', weak: '', mission: '' },
+    fundForm: { amount: '', source: 'Inporta', note: '', date: ymd(new Date()), withdraw: false },
+    fundLimit: 15,
+    examName: '',
+    importMode: 'merge',
+
+    /* ---------- lifecycle ---------- */
+    init() {
+      this.loadJournal();
+      this.$watch('data', () => { this.rev++; this.scheduleSave(); });
+      this.$watch('rev', () => this.checkLevel());
+      this.$watch('sel', () => this.loadJournal());
+      this.$watch('tab', () => window.scrollTo(0, 0));
+      this.$watch('modal', m => { document.body.style.overflow = m ? 'hidden' : ''; });
+      setInterval(() => this.tick(), 1000);
+      document.addEventListener('pointerdown', unlockAudio, { passive: true });
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') this.flushSave(); else this.tick(); });
+      window.addEventListener('pagehide', () => this.flushSave());
+      setupPWA();
+      this.checkLevel(true);
+      this.checkVerdict();
+    },
+    tick() {
+      const before = this.today;
+      this.now = Date.now();
+      const after = ymd(new Date(this.now));
+      if (after !== before) {
+        if (this.sel === before) this.sel = after;
+        this.fundForm.date = after;
+        this.checkVerdict();
+      }
+    },
+
+    /* ---------- persistence ---------- */
+    scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(() => this.persist(), 200); },
+    persist() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)); }
+      catch (e) { this.toast('⚠ Could not save — export a backup now.', 4000); }
+    },
+    flushSave() { clearTimeout(saveTimer); this.persist(); },
+
+    /* ---------- derived ---------- */
+    get today() { return ymd(new Date(this.now)); },
+    get stats() {
+      const key = this.rev + '|' + this.today;
+      if (MEMO.key !== key || !MEMO.val) { MEMO.key = key; MEMO.val = computeAll(Alpine.raw(this.data), this.today); }
+      return MEMO.val;
+    },
+    get level() { return levelInfo(this.stats.total); },
+    get rank() { return rankFor(this.level.lvl); },
+    get nextRank() { return nextRankFor(this.level.lvl); },
+    get xpToNextRank() { return this.nextRank ? Math.max(0, xpForLevel(this.nextRank.min) - Math.max(0, this.stats.total)) : 0; },
+    get arcDay() { return daysBetween(this.data.settings.arcStart, this.today) + 1; },
+    get arcLength() { return Math.max(1, daysBetween(this.data.settings.arcStart, this.data.settings.arcEnd)); },
+    get arcPct() {
+      const s = parseYmd(this.data.settings.arcStart).getTime(), e = parseYmd(this.data.settings.arcEnd).getTime();
+      return Math.min(100, Math.max(0, (this.now - s) / Math.max(1, e - s) * 100));
+    },
+    get lawOfDay() { return IRON_LAWS[Math.abs(daysBetween('2026-01-01', this.today)) % IRON_LAWS.length]; },
+
+    countdown(key) {
+      let ms = parseYmd(key).getTime() - this.now;
+      if (ms <= 0) return { done: true, d: 0, hms: '00:00:00' };
+      const d = Math.floor(ms / 86400000); ms -= d * 86400000;
+      const h = Math.floor(ms / 3600000); ms -= h * 3600000;
+      const m = Math.floor(ms / 60000); const s = Math.floor((ms - m * 60000) / 1000);
+      return { done: false, d, hms: pad2(h) + ':' + pad2(m) + ':' + pad2(s) };
+    },
+
+    /* ---------- helpers ---------- */
+    toast(msg, ms) {
+      this.toastMsg = msg;
+      clearTimeout(this.toastTimer);
+      this.toastTimer = setTimeout(() => { this.toastMsg = ''; }, ms || 2200);
+    },
+    float(text, kind) {
+      const id = uid();
+      this.floats.push({ id, text, kind: kind || 'ice' });
+      setTimeout(() => { this.floats = this.floats.filter(f => f.id !== id); }, 1350);
+    },
+    askConfirm(title, text, okText, danger, onOk) { this.confirmBox = { title, text, okText: okText || 'OK', danger: !!danger, onOk }; this.modal = 'confirm'; },
+    confirmOk() { const fn = this.confirmBox.onOk; this.modal = null; if (typeof fn === 'function') fn(); },
+    fmt(n) { return Math.round(Number(n) || 0).toLocaleString('en-US'); },
+    signed(n) { n = Math.round(Number(n) || 0); return (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n).toLocaleString('en-US'); },
+    eur(n) { const v = Number(n) || 0; return (v < 0 ? '−' : '') + '€' + Math.abs(v).toLocaleString('en-US', { maximumFractionDigits: 2 }); },
+    longDate(k) {
+      const d = parseYmd(k), o = { weekday: 'short', day: 'numeric', month: 'short' };
+      if (d.getFullYear() !== new Date().getFullYear()) o.year = 'numeric';
+      return d.toLocaleDateString('en-GB', o);
+    },
+    fullDate(k) { return parseYmd(k).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); },
+    relDay(k) { const n = daysBetween(k, this.today); return n === 0 ? 'Today' : n === 1 ? 'Yesterday' : n + ' days ago'; },
+    buzz(p) { if (this.data.settings.vibrate) vibrate(p); },
+
+    /* ---------- day navigation ---------- */
+    get selInArc() { return this.sel >= this.data.settings.arcStart && this.sel <= this.today; },
+    get canPrev() { return this.sel > this.data.settings.arcStart; },
+    get canNext() { return this.sel < this.today; },
+    shiftSel(n) {
+      const k = addDays(this.sel, n);
+      if (k < this.data.settings.arcStart || k > this.today) return;
+      this.sel = k;
+    },
+    openDay(k) {
+      if (k > this.today || k < this.data.settings.arcStart) return;
+      this.sel = k; this.tab = 'today';
+    },
+    ensureDay(k) {
+      if (!this.data.days[k]) this.data.days[k] = blankDay();
+      return this.data.days[k];
+    },
+    get selStats() {
+      return this.stats.days[this.sel] || { pct: 0, done: 0, coreDone: 0, earned: 0, perfect: 0, jb: 0, streakBonus: 0, penXp: 0, auto: 0, net: 0, relapse: false, holds: false, streak: 0, isToday: false };
+    },
+    get selPenalties() { const e = this.data.days[this.sel]; return e ? e.penalties : []; },
+
+    /* ---------- habits ---------- */
+    isDone(id) { const e = this.data.days[this.sel]; return !!(e && e.h && e.h[id]); },
+    pillarDone(p) { return p.habits.filter(h => this.isDone(h.id)).length; },
+    toggleHabit(h) {
+      if (!this.selInArc) { this.toast('This day is outside your Winter Arc'); return; }
+      const e = this.ensureDay(this.sel);
+      if (e.h[h.id]) {
+        delete e.h[h.id];
+        this.float('−' + h.xp + ' XP', 'red');
+        this.buzz(10);
+      } else {
+        e.h[h.id] = true;
+        this.float('+' + h.xp + ' XP', 'ice');
+        this.buzz(18);
+        if (this.data.settings.sound) { unlockAudio(); tone(880, .08, 0, .12); tone(1320, .12, .07, .1); }
+        const st = computeAll(Alpine.raw(this.data), this.today).days[this.sel];
+        if (st && st.done === HABITS.length) {
+          setTimeout(() => this.float('PERFECT DAY +' + PERFECT_BONUS, 'gold'), 350);
+          if (this.data.settings.sound) { tone(523, .12, .1); tone(659, .12, .22); tone(784, .12, .34); tone(1047, .35, .46); }
+          this.buzz([30, 50, 30, 50, 120]);
+        }
+      }
+    },
+
+    /* ---------- penalties ---------- */
+    openPenalty(p) {
+      if (!this.selInArc) { this.toast('This day is outside your Winter Arc'); return; }
+      this.penaltyDraft = { type: p, note: '' };
+      this.modal = 'penalty';
+    },
+    applyPenalty() {
+      const p = this.penaltyDraft.type; if (!p) return;
+      const e = this.ensureDay(this.sel);
+      const streakBefore = this.stats.streak;
+      e.penalties.push({ id: uid(), type: p.id, t: p.t, xp: p.xp, streak: p.streak, note: this.penaltyDraft.note.trim(), ts: new Date().toISOString() });
+      this.modal = null;
+      this.float('−' + p.xp + ' XP', 'red');
+      this.buzz([200, 80, 200]);
+      if (this.data.settings.sound) { unlockAudio(); tone(220, .25, 0, .2, 'sawtooth'); tone(160, .4, .22, .2, 'sawtooth'); }
+      this.toast(p.streak && streakBefore > 0 ? '⛔ Penalty logged. Monk Mode streak reset to 0.' : '⛔ Penalty logged: −' + p.xp + ' XP', 3000);
+    },
+    removePenalty(pen) {
+      this.askConfirm('Undo penalty?', 'Only undo it if it was logged by mistake. Accountability only works if you are honest with yourself.', 'Undo', false, () => {
+        const e = this.data.days[this.sel]; if (!e) return;
+        e.penalties = e.penalties.filter(x => x.id !== pen.id);
+      });
+    },
+
+    /* ---------- level / verdict ---------- */
+    checkLevel(silent) {
+      const lvl = this.level.lvl, seen = this.data.lastLevelSeen || 1;
+      if (lvl === seen) return;
+      if (lvl > seen && !silent) {
+        const oldRank = rankFor(seen).name, newRank = rankFor(lvl).name;
+        this.rankUp = { lvl, rank: newRank, newRank: oldRank !== newRank };
+        if (this.modal === null) this.modal = 'rankup';
+        if (this.data.settings.sound) { unlockAudio(); [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, .16, i * .1, .16)); }
+        this.buzz([50, 50, 50, 50, 300]);
+      } else if (lvl < seen && !silent) {
+        this.toast('▼ Level lost — now LVL ' + lvl + '. Earn it back.', 3500);
+      }
+      this.data.lastLevelSeen = lvl;
+    },
+    checkVerdict() {
+      const y = addDays(this.today, -1);
+      const s = this.data.settings;
+      if (y < s.arcStart || this.data.lastVerdict >= y) return;
+      const st = this.stats.days[y];
+      if (!st) return;
+      this.verdict = { date: y, st, streak: st.streak };
+      this.modal = 'verdict';
+    },
+    closeVerdict() { this.data.lastVerdict = addDays(this.today, -1); this.modal = null; },
+    verdictLine(st) {
+      if (st.relapse) return 'A dopamine rule was broken. The streak is gone. Rebuild it today.';
+      if (st.pct === 1) return 'Flawless. 13/13. This is who you are now.';
+      if (st.holds && st.pct >= 0.75) return 'Line held. Strong day. Repeat it.';
+      if (st.holds) return 'Core held — but you left XP on the table.';
+      if (st.pct >= 0.5) return 'Half-measures. Core habits missed. Tighten up.';
+      return 'You drifted. Never miss twice — today decides.';
+    },
+
+    /* ---------- heatmap ---------- */
+    cellClass(c) {
+      if (c.out) return 'lvx';
+      if (c.future) return 'lvf';
+      if (c.before) return 'lvx';
+      const p = c.pct;
+      return p <= 0 ? 'lv0' : p < 0.26 ? 'lv1' : p < 0.51 ? 'lv2' : p < 0.76 ? 'lv3' : p < 1 ? 'lv4' : 'lv5';
+    },
+    get heat() {
+      const s = this.data.settings, today = this.today;
+      let from, to;
+      if (this.heatMode === '30') { to = today; from = addDays(today, -29); }
+      else { from = s.arcStart; to = s.arcEnd; }
+      const gridStart = startOfWeekKey(from);
+      const gridEnd = addDays(startOfWeekKey(to), 6);
+      const cells = [];
+      for (let k = gridStart, i = 0; k <= gridEnd && i < 800; k = addDays(k, 1), i++) {
+        const st = this.stats.days[k];
+        cells.push({ k, out: k < from || k > to, future: k > today, before: k < s.arcStart, today: k === today,
+          pct: st ? st.pct : 0, relapse: st ? st.relapse : false, sel: k === this.sel });
+      }
+      const inRange = cells.filter(c => !c.out && !c.future && !c.before);
+      const avg = inRange.length ? inRange.reduce((a, c) => a + c.pct, 0) / inRange.length : 0;
+      return { cells, weeks: Math.ceil(cells.length / 7), avg, perfect: inRange.filter(c => c.pct === 1).length, days: inRange.length };
+    },
+    get ledger() {
+      const out = [];
+      for (let i = 0; i < 7; i++) {
+        const k = addDays(this.today, -i);
+        if (k < this.data.settings.arcStart) break;
+        const st = this.stats.days[k];
+        if (st) out.push({ k, st });
+      }
+      return out;
+    },
+    get ledgerMax() { return Math.max(1, ...this.ledger.map(x => Math.abs(x.st.net))); },
+
+    /* ---------- journal ---------- */
+    loadJournal() {
+      const e = this.data.days[this.sel];
+      const j = e ? e.journal : null;
+      this.jForm = { win: j ? j.win : '', weak: j ? j.weak : '', mission: j ? j.mission : '' };
+    },
+    saveJournal() {
+      if (!this.selInArc) return;
+      const has = this.jForm.win.trim() || this.jForm.weak.trim() || this.jForm.mission.trim();
+      const e = this.data.days[this.sel];
+      if (!e && !has) return;
+      const d = this.ensureDay(this.sel);
+      d.journal.win = this.jForm.win; d.journal.weak = this.jForm.weak; d.journal.mission = this.jForm.mission;
+    },
+    get journalArchive() {
+      return Object.keys(this.data.days)
+        .filter(k => { const j = this.data.days[k].journal; return j && (j.win.trim() || j.weak.trim() || j.mission.trim()); })
+        .sort().reverse().slice(0, 60)
+        .map(k => ({ k, j: this.data.days[k].journal }));
+    },
+    get yesterdayMission() {
+      const e = this.data.days[addDays(this.sel, -1)];
+      return e && e.journal && e.journal.mission.trim() ? e.journal.mission.trim() : '';
+    },
+
+    /* ---------- fund ---------- */
+    get fundTotal() { return this.stats.fundTotal; },
+    get fundPct() { return Math.min(100, Math.max(0, this.fundTotal / this.data.settings.fundTarget * 100)); },
+    get fundBySource() {
+      const m = {}; FUND_SOURCES.forEach(s => m[s] = 0);
+      this.data.fund.forEach(f => { m[f.source] = (m[f.source] || 0) + f.amount; });
+      return FUND_SOURCES.map(s => ({ s, v: m[s] }));
+    },
+    get fundPace() {
+      const left = Math.max(0, this.data.settings.fundTarget - this.fundTotal);
+      const days = Math.max(0, daysBetween(this.today, this.data.settings.goalDate));
+      const weeks = Math.max(1 / 7, days / 7);
+      const month = this.today.slice(0, 7);
+      const thisMonth = this.data.fund.filter(f => f.date.slice(0, 7) === month).reduce((a, f) => a + f.amount, 0);
+      return { left, days, perWeek: left / weeks, perMonth: left / Math.max(1 / 30, days / 30), thisMonth };
+    },
+    get fundList() { return this.data.fund.slice().sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : 0).slice(0, this.fundLimit); },
+    addToAmount(v) { const cur = num(this.fundForm.amount) || 0; this.fundForm.amount = String(Math.round((cur + v) * 100) / 100); },
+    addFund() {
+      const a = num(this.fundForm.amount);
+      if (!(a > 0)) { this.toast('Enter an amount in €'); return; }
+      if (!isKey(this.fundForm.date) || this.fundForm.date > this.today) { this.toast('Pick a valid date'); return; }
+      const before = Math.floor(this.fundTotal / 1000);
+      const amount = Math.round(a * 100) / 100 * (this.fundForm.withdraw ? -1 : 1);
+      this.data.fund.push({ id: uid(), date: this.fundForm.date, amount, source: this.fundForm.source, note: this.fundForm.note.trim() });
+      const after = Math.floor((this.fundTotal + amount) / 1000);
+      this.fundForm.amount = ''; this.fundForm.note = ''; this.fundForm.withdraw = false;
+      if (amount > 0) {
+        this.float('+' + this.eur(amount), 'gold');
+        if (this.data.settings.sound) { unlockAudio(); tone(1046, .08, 0, .14); tone(1568, .18, .08, .12); }
+        this.toast(after > before ? '💰 New €1,000 milestone! +' + FUND_XP_PER_1000 + ' XP' : 'Logged ' + this.eur(amount) + ' to the fund', 2600);
+      } else this.toast('Withdrawal logged: ' + this.eur(amount));
+    },
+    deleteFund(f) {
+      this.askConfirm('Delete entry?', this.eur(f.amount) + ' · ' + f.source + ' · ' + this.longDate(f.date), 'Delete', true, () => {
+        this.data.fund = this.data.fund.filter(x => x.id !== f.id);
+      });
+    },
+
+    /* ---------- juz ---------- */
+    get juzDone() { return this.data.juz.filter(v => v === 2).length; },
+    get juzActive() { return this.data.juz.filter(v => v === 1).length; },
+    get juzPct() { return Math.min(100, this.juzDone / this.data.settings.juzGoal * 100); },
+    cycleJuz(i) {
+      const v = this.data.juz[i];
+      const nv = v === 0 ? 1 : v === 1 ? 2 : 0;
+      this.data.juz.splice(i, 1, nv);
+      if (nv === 2) {
+        this.float('JUZ ' + (i + 1) + ' +' + JUZ_XP + ' XP', 'gold');
+        this.buzz([40, 40, 120]);
+        if (this.data.settings.sound) { unlockAudio(); tone(659, .12, 0); tone(988, .25, .12); }
+      }
+    },
+
+    /* ---------- exams ---------- */
+    get examsPassed() { return this.data.exams.filter(x => x.passed).length; },
+    get examPct() { return this.data.exams.length ? this.examsPassed / this.data.exams.length * 100 : 0; },
+    addExam() {
+      const n = this.examName.trim();
+      if (!n) { this.toast('Type the exam name'); return; }
+      this.data.exams.push({ id: uid(), name: n.slice(0, 80), passed: false, grade: '' });
+      this.examName = '';
+    },
+    toggleExam(x) {
+      x.passed = !x.passed;
+      if (x.passed) {
+        this.float('EXAM PASSED +' + EXAM_XP + ' XP', 'gold');
+        this.buzz([40, 40, 40, 40, 200]);
+        if (this.data.settings.sound) { unlockAudio(); [523, 784, 1047].forEach((f, i) => tone(f, .18, i * .12, .15)); }
+      }
+    },
+    deleteExam(x) {
+      this.askConfirm('Remove exam?', x.name, 'Remove', true, () => { this.data.exams = this.data.exams.filter(e => e.id !== x.id); });
+    },
+
+    /* ---------- backup ---------- */
+    backupName() { return 'winter-arc-backup-' + this.today + '.json'; },
+    payload() { return { app: 'WinterArc', version: 1, exportedAt: new Date().toISOString(), data: JSON.parse(JSON.stringify(this.data)) }; },
+    exportData() {
+      const blob = new Blob([JSON.stringify(this.payload(), null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = this.backupName();
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      this.data.settings.lastBackup = new Date().toISOString();
+      this.toast('Backup downloaded ✔');
+    },
+    get canShareFiles() {
+      try { return !!(navigator.canShare && navigator.canShare({ files: [new File(['{}'], 'x.json', { type: 'application/json' })] })); }
+      catch (e) { return false; }
+    },
+    async shareData() {
+      try {
+        await navigator.share({ files: [new File([JSON.stringify(this.payload())], this.backupName(), { type: 'application/json' })], title: 'Winter Arc backup' });
+        this.data.settings.lastBackup = new Date().toISOString();
+      } catch (e) { if (e && e.name !== 'AbortError') this.toast('Sharing failed — use Export instead'); }
+    },
+    openImport(mode) { this.importMode = mode; this.$refs.importInput.click(); },
+    async handleImport(ev) {
+      const file = ev.target.files && ev.target.files[0];
+      ev.target.value = '';
+      if (!file) return;
+      let inc;
+      try { const obj = JSON.parse(await file.text()); inc = normalizeData(obj && obj.data ? obj.data : obj); }
+      catch (e) { this.toast('Import failed: ' + (e.message || 'invalid file'), 3500); return; }
+      if (this.importMode === 'replace') {
+        this.askConfirm('Replace all data?', 'Everything on this device will be overwritten with the backup (' + Object.keys(inc.days).length + ' logged days, ' + inc.fund.length + ' fund entries).', 'Replace', true, () => {
+          inc.lastVerdict = addDays(this.today, -1);
+          this.data = inc;
+          this.MEMO_reset();
+          this.data.lastLevelSeen = this.level.lvl;
+          this.loadJournal();
+          this.toast('Backup restored ✔');
+        });
+        return;
+      }
+      const cur = this.data;
+      let addedDays = 0;
+      Object.keys(inc.days).forEach(k => {
+        const a = cur.days[k], b = inc.days[k];
+        if (!a) { cur.days[k] = b; addedDays++; return; }
+        Object.keys(b.h).forEach(id => { a.h[id] = true; });
+        const ids = new Set(a.penalties.map(p => p.id));
+        b.penalties.forEach(p => { if (!ids.has(p.id)) a.penalties.push(p); });
+        ['win', 'weak', 'mission'].forEach(f => { if (!a.journal[f].trim() && b.journal[f]) a.journal[f] = b.journal[f]; });
+      });
+      const fids = new Set(cur.fund.map(f => f.id));
+      let addedFund = 0;
+      inc.fund.forEach(f => { if (!fids.has(f.id)) { cur.fund.push(f); addedFund++; } });
+      for (let i = 0; i < 30; i++) cur.juz.splice(i, 1, Math.max(cur.juz[i], inc.juz[i]));
+      inc.exams.forEach(x => {
+        const m = cur.exams.find(e => e.id === x.id || e.name.toLowerCase() === x.name.toLowerCase());
+        if (!m) cur.exams.push(x); else if (x.passed) m.passed = true;
+      });
+      if (inc.settings.arcStart < cur.settings.arcStart) cur.settings.arcStart = inc.settings.arcStart;
+      this.loadJournal();
+      this.toast('Merged: +' + addedDays + ' days, +' + addedFund + ' fund entries', 3000);
+    },
+    MEMO_reset() { MEMO.key = ''; MEMO.val = null; },
+    resetAll() {
+      this.askConfirm('Reset everything?', 'All logs, XP, streaks, fund entries, juz and exams on this device will be erased. Export a backup first if unsure.', 'Erase all', true, () => {
+        this.data = defaultData();
+        this.MEMO_reset();
+        this.sel = this.today;
+        this.loadJournal();
+        this.flushSave();
+        this.tab = 'hq';
+        this.toast('Fresh start. Day 1.');
+      });
+    },
+    setStart(v) {
+      if (!isKey(v) || v > this.today) { this.toast('Start date must be today or earlier'); return; }
+      const prev = this.data.settings.arcStart;
+      const apply = () => { this.data.settings.arcStart = v; if (this.sel < v) this.sel = v; this.data.lastVerdict = addDays(this.today, -1); };
+      if (v < prev) {
+        const n = daysBetween(v, prev);
+        this.askConfirm('Move start earlier?', n + ' extra day(s) will be judged. Days you did not log count as missed — each missed CORE habit costs ' + AUTO_PENALTY + ' XP. Log those days honestly afterwards.', 'Move start', false, apply);
+      } else apply();
+    },
+    setDate(key, v) {
+      if (!isKey(v) || v <= this.today) { this.toast('Pick a future date'); return; }
+      this.data.settings[key] = v;
+    },
+    setNumber(key, v, min, max) {
+      const n = num(v);
+      if (!Number.isFinite(n)) { this.toast('Enter a number'); return; }
+      this.data.settings[key] = Math.min(max, Math.max(min, key === 'juzGoal' ? Math.round(n) : n));
+    },
+    get storageSize() { void this.rev; try { const n = (localStorage.getItem(STORAGE_KEY) || '').length; return Math.max(1, Math.ceil(n / 1024)) + ' KB'; } catch (e) { return '—'; } }
+  };
+}
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</head>
+
+<body x-data="winterArc()" class="min-h-screen antialiased">
+
+<!-- status bar backdrop -->
+<div class="fixed top-0 inset-x-0 z-[55] bg-obsidian" style="height: env(safe-area-inset-top)"></div>
+
+<!-- toast -->
+<div x-cloak x-show="toastMsg" x-transition.opacity.duration.200ms class="fixed inset-x-0 z-[90] flex justify-center px-4 pointer-events-none" style="top: calc(env(safe-area-inset-top) + 92px)">
+  <div class="pop max-w-sm rounded-lg bg-slate-100 text-slate-900 px-4 py-2.5 text-sm font-semibold shadow-2xl shadow-black/70 text-center" x-text="toastMsg"></div>
+</div>
+
+<!-- XP floats -->
+<template x-for="f in floats" :key="f.id">
+  <div class="xpfloat z-[95] font-hud font-bold text-2xl tracking-wider" style="bottom: calc(110px + env(safe-area-inset-bottom))"
+       :class="f.kind === 'red' ? 'text-blood' : (f.kind === 'gold' ? 'text-gold glow-gold' : 'text-ice glow-ice')" x-text="f.text"></div>
+</template>
+
+<!-- ============================ TOP COUNTDOWN BAR ============================ -->
+<header class="sticky z-40 bg-obsidian/90 backdrop-blur border-b border-line" style="top: env(safe-area-inset-top)">
+  <div class="mx-auto max-w-md px-3 pt-2.5 pb-2">
+    <div class="grid grid-cols-2 gap-2">
+      <div class="rounded-lg border border-ice/25 bg-ice/[0.04] px-2.5 py-1.5">
+        <div class="flex items-center justify-between">
+          <span class="font-hud text-[9.5px] tracking-[.18em] text-ice/80 font-semibold">❄ WINTER ARC ENDS</span>
+          <span class="font-mono text-[9px] text-slate-500" x-text="longDate(data.settings.arcEnd)"></span>
+        </div>
+        <div class="flex items-baseline gap-1.5">
+          <span class="font-hud text-2xl font-bold text-ice glow-ice tabular" x-text="countdown(data.settings.arcEnd).done ? 'DONE' : countdown(data.settings.arcEnd).d"></span>
+          <span x-show="!countdown(data.settings.arcEnd).done" class="font-hud text-[10px] text-slate-400 font-semibold">DAYS</span>
+          <span x-show="!countdown(data.settings.arcEnd).done" class="ml-auto font-mono text-[11px] text-slate-300 tabular" x-text="countdown(data.settings.arcEnd).hms"></span>
+        </div>
+      </div>
+      <div class="rounded-lg border border-gold/25 bg-gold/[0.04] px-2.5 py-1.5">
+        <div class="flex items-center justify-between">
+          <span class="font-hud text-[9.5px] tracking-[.18em] text-gold/90 font-semibold">✈ ISTANBUL · NIKAH</span>
+          <span class="font-mono text-[9px] text-slate-500" x-text="longDate(data.settings.goalDate)"></span>
+        </div>
+        <div class="flex items-baseline gap-1.5">
+          <span class="font-hud text-2xl font-bold text-gold glow-gold tabular" x-text="countdown(data.settings.goalDate).done ? 'DONE' : countdown(data.settings.goalDate).d"></span>
+          <span x-show="!countdown(data.settings.goalDate).done" class="font-hud text-[10px] text-slate-400 font-semibold">DAYS</span>
+          <span x-show="!countdown(data.settings.goalDate).done" class="ml-auto font-mono text-[11px] text-slate-300 tabular" x-text="countdown(data.settings.goalDate).hms"></span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 flex items-center gap-2">
+      <span class="font-mono text-[9.5px] text-slate-500 whitespace-nowrap" x-text="'DAY ' + Math.max(0, arcDay) + '/' + arcLength"></span>
+      <div class="flex-1 h-1 rounded-full bg-line overflow-hidden"><div class="h-full ice-fill" :style="'width:' + arcPct + '%'"></div></div>
+      <span class="font-mono text-[9.5px] text-slate-500" x-text="Math.floor(arcPct) + '%'"></span>
+    </div>
+  </div>
+</header>
+
+<main class="mx-auto max-w-md px-3 pt-3 pb-28">
+
+  <!-- ===================================================== HQ ===================================================== -->
+  <section x-show="tab === 'hq'" class="space-y-3">
+    <div class="flex items-end justify-between pt-1">
+      <div>
+        <div class="label" x-text="'Operator · ' + data.settings.name"></div>
+        <h1 class="font-hud text-[28px] leading-none font-bold tracking-wider mt-1">COMMAND <span class="text-ice">CENTER</span></h1>
+      </div>
+      <div class="text-right">
+        <div class="label">Day</div>
+        <div class="font-hud text-2xl font-bold tabular" x-text="Math.max(0, arcDay)"></div>
+      </div>
+    </div>
+
+    <!-- rank card -->
+    <div class="panel hud overflow-hidden" :class="level.lvl >= 25 ? 'hud-gold' : ''">
+      <div class="flex items-center gap-4">
+        <div class="relative h-[84px] w-[74px] shrink-0">
+          <svg viewBox="0 0 74 84" class="absolute inset-0 h-full w-full">
+            <path d="M37 3 L70 15 V44 C70 63 55 76 37 81 C19 76 4 63 4 44 V15 Z" fill="#0A0A14" :stroke="level.lvl >= 25 ? '#F59E0B' : '#38BDF8'" stroke-width="2.5"/>
+            <path d="M18 56 L37 45 L56 56" fill="none" :stroke="level.lvl >= 25 ? '#F59E0B' : '#38BDF8'" stroke-width="3" stroke-linejoin="round" opacity=".55"/>
+            <path d="M18 65 L37 54 L56 65" fill="none" :stroke="level.lvl >= 25 ? '#F59E0B' : '#38BDF8'" stroke-width="3" stroke-linejoin="round" :opacity="level.lvl >= 10 ? .9 : .15"/>
+          </svg>
+          <div class="absolute inset-x-0 top-[17px] text-center">
+            <div class="font-mono text-[8px] tracking-[.2em] text-slate-500">LVL</div>
+            <div class="font-hud text-[26px] leading-none font-bold" :class="level.lvl >= 25 ? 'text-gold' : 'text-ice'" x-text="level.lvl"></div>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="label">Current rank</div>
+          <div class="font-hud text-[28px] leading-tight font-bold uppercase tracking-wide truncate" :class="level.lvl >= 50 ? 'shine' : (level.lvl >= 25 ? 'text-gold' : 'text-white')" x-text="rank.name"></div>
+          <div class="mt-2 bar"><i :class="level.lvl >= 25 ? 'gold-fill' : 'ice-fill'" :style="'width:' + level.pct + '%'"></i></div>
+          <div class="mt-1.5 flex justify-between font-mono text-[10.5px] text-slate-400 tabular">
+            <span><span x-text="fmt(level.into)"></span> / <span x-text="fmt(level.need)"></span> XP</span>
+            <span x-text="'→ LVL ' + (level.lvl + 1)"></span>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 grid grid-cols-3 gap-2">
+        <div class="rounded-lg bg-black/40 border border-line px-2 py-2">
+          <div class="label !text-[9px]">Total XP</div>
+          <div class="font-hud text-lg font-bold tabular" :class="stats.total < 0 ? 'text-blood' : 'text-white'" x-text="signed(stats.total).replace('+','')"></div>
+        </div>
+        <div class="rounded-lg bg-black/40 border border-line px-2 py-2">
+          <div class="label !text-[9px]">Penalties</div>
+          <div class="font-hud text-lg font-bold text-blood tabular" x-text="'−' + fmt(stats.penalties + stats.auto)"></div>
+        </div>
+        <div class="rounded-lg bg-black/40 border border-line px-2 py-2">
+          <div class="label !text-[9px]">Next rank</div>
+          <div class="font-hud text-[13px] leading-5 font-bold truncate" x-text="nextRank ? nextRank.name : 'MAX'"></div>
+          <div class="font-mono text-[9.5px] text-slate-500" x-text="nextRank ? 'LVL ' + nextRank.min + ' · ' + fmt(xpToNextRank) + ' XP' : 'Final form'"></div>
+        </div>
+      </div>
+      <p x-show="stats.total < 0" class="mt-2 text-[11px] text-blood font-semibold">XP debt — penalties outweigh your work. Clear it with clean days.</p>
+    </div>
+
+    <!-- streak -->
+    <div class="grid grid-cols-5 gap-3">
+      <div class="panel col-span-3 !p-4" :class="stats.streak > 0 ? 'border-ice/30' : ''">
+        <div class="label">Monk mode streak</div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="font-hud text-5xl font-bold tabular" :class="stats.streak > 0 ? 'text-ice glow-ice' : 'text-slate-600'" x-text="stats.streak"></span>
+          <span class="font-hud text-sm text-slate-400 font-semibold">DAYS</span>
+        </div>
+        <div class="mt-1 text-[11px] text-slate-500 leading-snug">All 5 CORE habits done & no dopamine relapse. Bonus <span class="text-ice font-semibold" x-text="'+' + Math.min(Math.max(stats.streak,1),30) * 2 + ' XP/day'"></span></div>
+      </div>
+      <div class="col-span-2 grid gap-3">
+        <div class="panel !p-3">
+          <div class="label !text-[9px]">Longest</div>
+          <div class="font-hud text-2xl font-bold tabular" x-text="stats.longest"></div>
+        </div>
+        <div class="panel !p-3">
+          <div class="label !text-[9px]">Perfect days</div>
+          <div class="font-hud text-2xl font-bold text-gold tabular" x-text="stats.perfect"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- today status -->
+    <button @click="sel = today; tab = 'today'" class="panel w-full text-left press !p-4 flex items-center gap-4">
+      <div class="relative h-16 w-16 shrink-0">
+        <svg viewBox="0 0 36 36" class="h-16 w-16 -rotate-90">
+          <circle cx="18" cy="18" r="15.5" fill="none" stroke="#151526" stroke-width="3.5"/>
+          <circle cx="18" cy="18" r="15.5" fill="none" :stroke="(stats.days[today] && stats.days[today].pct === 1) ? '#F59E0B' : '#38BDF8'" stroke-width="3.5" stroke-linecap="round"
+                  stroke-dasharray="97.4" :stroke-dashoffset="97.4 - 97.4 * (stats.days[today] ? stats.days[today].pct : 0)" style="transition: stroke-dashoffset .6s"/>
+        </svg>
+        <div class="absolute inset-0 grid place-items-center font-hud text-sm font-bold" x-text="Math.round((stats.days[today] ? stats.days[today].pct : 0) * 100) + '%'"></div>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="label">Today's non-negotiables</div>
+        <div class="font-hud text-xl font-bold mt-0.5"><span x-text="stats.days[today] ? stats.days[today].done : 0"></span>/13 <span class="text-slate-500 text-base">done</span></div>
+        <div class="text-[11px] mt-0.5" :class="(stats.days[today] && stats.days[today].coreDone === 5) ? 'text-ice' : 'text-gold'"
+             x-text="(stats.days[today] && stats.days[today].coreDone === 5) ? 'Core secured ✔ streak protected' : 'CORE ' + (stats.days[today] ? stats.days[today].coreDone : 0) + '/5 — ' + ((5 - (stats.days[today] ? stats.days[today].coreDone : 0)) * 20) + ' XP penalty at midnight'"></div>
+      </div>
+      <svg class="h-6 w-6 text-slate-500" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+
+    <!-- iron law -->
+    <div class="panel hud hud-gold !p-4">
+      <div class="flex items-center justify-between">
+        <div class="label !text-gold/80">Iron law of the day</div>
+        <button @click="modal = 'laws'" class="font-mono text-[10px] text-slate-400 underline underline-offset-4">ALL LAWS</button>
+      </div>
+      <p class="font-hud text-[19px] leading-snug font-semibold mt-2 text-slate-100" x-text="'“' + lawOfDay + '”'"></p>
+    </div>
+
+    <!-- heatmap -->
+    <div class="panel !p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="label">Consistency grid</div>
+          <div class="text-[11px] text-slate-500 mt-0.5"><span x-text="Math.round(heat.avg * 100)"></span>% avg · <span x-text="heat.perfect"></span> perfect · tap a day</div>
+        </div>
+        <div class="flex rounded-md bg-black/50 border border-line p-0.5 font-mono text-[10.5px] font-bold">
+          <button @click="heatMode = '30'" class="px-2.5 py-1.5 rounded" :class="heatMode === '30' ? 'bg-ice text-obsidian' : 'text-slate-400'">30D</button>
+          <button @click="heatMode = 'arc'" class="px-2.5 py-1.5 rounded" :class="heatMode === 'arc' ? 'bg-ice text-obsidian' : 'text-slate-400'">ARC</button>
+        </div>
+      </div>
+      <div class="mt-3 flex gap-1.5">
+        <div class="grid gap-[3px] font-mono text-[8.5px] text-slate-600 pr-0.5" style="grid-template-rows: repeat(7, minmax(0, 1fr));">
+          <template x-for="(d, i) in ['M','T','W','T','F','S','S']" :key="i"><div class="flex items-center" x-text="i % 2 === 0 ? d : ''"></div></template>
+        </div>
+        <div class="flex-1 grid" :class="heatMode === '30' ? 'gap-[3px]' : 'gap-[2px]'" :style="'grid-template-rows: repeat(7, minmax(0, 1fr)); grid-auto-flow: column; grid-auto-columns: minmax(0, ' + (heatMode === '30' ? '34px' : '1fr') + ');'">
+          <template x-for="c in heat.cells" :key="c.k">
+            <button @click="openDay(c.k)" class="aspect-square rounded-[3px] relative" :class="[cellClass(c), c.today ? 'ring-1 ring-white/80' : '', c.sel && !c.today ? 'ring-1 ring-gold' : ''].join(' ')"
+                    :title="c.k + ' · ' + Math.round(c.pct * 100) + '%'" :aria-label="c.k">
+              <span x-show="c.relapse && !c.out" class="absolute inset-0 m-auto h-1.5 w-1.5 rounded-full bg-blood"></span>
+            </button>
+          </template>
+        </div>
+      </div>
+      <div class="mt-3 flex items-center justify-between font-mono text-[9.5px] text-slate-500">
+        <div class="flex items-center gap-1">0%
+          <span class="h-2.5 w-2.5 rounded-sm lv0"></span><span class="h-2.5 w-2.5 rounded-sm lv1"></span><span class="h-2.5 w-2.5 rounded-sm lv2"></span><span class="h-2.5 w-2.5 rounded-sm lv3"></span><span class="h-2.5 w-2.5 rounded-sm lv4"></span><span class="h-2.5 w-2.5 rounded-sm lv5"></span>100%
+        </div>
+        <div class="flex items-center gap-1"><span class="h-1.5 w-1.5 rounded-full bg-blood"></span> relapse</div>
+      </div>
+    </div>
+
+    <!-- ledger -->
+    <div class="panel !p-4">
+      <div class="label">XP ledger · last 7 days</div>
+      <div class="mt-3 space-y-1.5">
+        <template x-for="row in ledger" :key="row.k">
+          <button @click="openDay(row.k)" class="w-full flex items-center gap-2 text-left">
+            <span class="w-16 font-mono text-[10.5px] text-slate-400" x-text="row.k === today ? 'TODAY' : longDate(row.k).toUpperCase().slice(0, 10)"></span>
+            <span class="flex-1 h-2 rounded-full bg-black/40 relative overflow-hidden">
+              <span class="absolute inset-y-0 left-0 rounded-full" :class="row.st.net >= 0 ? (row.st.pct === 1 ? 'gold-fill' : 'ice-fill') : 'bg-blood'" :style="'width:' + Math.abs(row.st.net) / ledgerMax * 100 + '%'"></span>
+            </span>
+            <span class="w-14 text-right font-mono text-[11px] font-bold tabular" :class="row.st.net >= 0 ? 'text-slate-200' : 'text-blood'" x-text="signed(row.st.net)"></span>
+          </button>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== TODAY ===================================================== -->
+  <section x-show="tab === 'today'" class="space-y-3">
+    <!-- date nav -->
+    <div class="flex items-center gap-2 pt-1">
+      <button @click="shiftSel(-1)" :disabled="!canPrev" class="h-11 w-11 grid place-items-center rounded-lg border border-line bg-panel press disabled:opacity-30" aria-label="Previous day">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="flex-1 text-center">
+        <div class="font-hud text-lg font-bold uppercase tracking-wide" x-text="sel === today ? 'Today' : relDay(sel)"></div>
+        <div class="font-mono text-[10.5px] text-slate-500" x-text="fullDate(sel).toUpperCase()"></div>
+      </div>
+      <button @click="shiftSel(1)" :disabled="!canNext" class="h-11 w-11 grid place-items-center rounded-lg border border-line bg-panel press disabled:opacity-30" aria-label="Next day">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <div x-show="sel !== today" class="rounded-lg border border-gold/30 bg-gold/5 px-3 py-2 text-[11.5px] text-gold">Editing a past day. Be honest — the system only works if you are.</div>
+
+    <!-- summary -->
+    <div class="panel hud !p-4">
+      <div class="flex items-center gap-4">
+        <div class="flex-1">
+          <div class="label">Completion</div>
+          <div class="font-hud text-4xl font-bold tabular" :class="selStats.pct === 1 ? 'text-gold glow-gold' : 'text-white'" x-text="Math.round(selStats.pct * 100) + '%'"></div>
+        </div>
+        <div class="text-right">
+          <div class="label">Net XP</div>
+          <div class="font-hud text-3xl font-bold tabular" :class="selStats.net < 0 ? 'text-blood' : 'text-ice'" x-text="signed(selStats.net)"></div>
+        </div>
+      </div>
+      <div class="mt-3 bar"><i :class="selStats.pct === 1 ? 'gold-fill' : 'ice-fill'" :style="'width:' + selStats.pct * 100 + '%'"></i></div>
+      <div class="mt-3 flex flex-wrap gap-1.5">
+        <span class="tag" :class="selStats.coreDone === 5 ? 'tag-ice' : 'tag-gold'" x-text="'CORE ' + selStats.coreDone + '/5'"></span>
+        <span class="tag" x-text="'HABITS +' + selStats.earned"></span>
+        <span x-show="selStats.streakBonus" class="tag tag-ice" x-text="'STREAK +' + selStats.streakBonus"></span>
+        <span x-show="selStats.perfect" class="tag tag-gold" x-text="'PERFECT +' + selStats.perfect"></span>
+        <span x-show="selStats.jb" class="tag tag-ice" x-text="'MIRROR +' + selStats.jb"></span>
+        <span x-show="selStats.penXp" class="tag tag-red" x-text="'PENALTY −' + selStats.penXp"></span>
+        <span x-show="selStats.auto" class="tag tag-red" x-text="'MISSED CORE −' + selStats.auto"></span>
+      </div>
+      <p x-show="sel === today && selStats.coreDone < 5" class="mt-2 text-[11px] text-slate-500">At midnight every unchecked CORE habit costs −20 XP and the streak resets.</p>
+      <p x-show="yesterdayMission" class="mt-3 text-[12px] text-slate-300 border-t border-line pt-2"><span class="label !text-ice/80">Mission set last night · </span><span x-text="yesterdayMission"></span></p>
+    </div>
+
+    <!-- pillars -->
+    <template x-for="p in pillars" :key="p.id">
+      <div class="panel !p-0 overflow-hidden">
+        <button @click="collapsed[p.id] = !collapsed[p.id]" class="w-full flex items-center gap-3 px-4 py-3.5 text-left">
+          <span class="h-9 w-9 grid place-items-center rounded-lg font-hud text-lg"
+                :class="pillarDone(p) === p.habits.length ? 'bg-gold/15 text-gold' : 'bg-ice/10 text-ice'" x-text="p.icon"></span>
+          <span class="flex-1 min-w-0">
+            <span class="block font-hud text-[15px] font-bold uppercase tracking-wider truncate" x-text="p.name"></span>
+            <span class="block text-[11px] text-slate-500 italic" x-text="p.bs"></span>
+          </span>
+          <span class="font-mono text-xs font-bold tabular" :class="pillarDone(p) === p.habits.length ? 'text-gold' : 'text-slate-400'" x-text="pillarDone(p) + '/' + p.habits.length"></span>
+          <svg class="h-4 w-4 text-slate-500 transition-transform" :class="collapsed[p.id] ? '-rotate-90' : ''" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="h-0.5 bg-line"><div class="h-full transition-all duration-500" :class="pillarDone(p) === p.habits.length ? 'bg-gold' : 'bg-ice'" :style="'width:' + pillarDone(p) / p.habits.length * 100 + '%'"></div></div>
+        <div x-show="!collapsed[p.id]" class="p-2.5 space-y-2">
+          <template x-for="h in p.habits" :key="h.id">
+            <button @click="toggleHabit(h)" class="w-full flex items-start gap-3 rounded-xl border p-3 text-left press transition-colors"
+                    :class="isDone(h.id) ? 'bg-gold/[0.07] border-gold/45' : 'bg-white/[0.015] border-line'">
+              <span class="mt-0.5 h-7 w-7 shrink-0 rounded-md border-2 grid place-items-center transition-colors"
+                    :class="isDone(h.id) ? 'bg-gold border-gold text-obsidian' : (h.core ? 'border-ice/60' : 'border-slate-600')">
+                <svg x-show="isDone(h.id)" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+              </span>
+              <span class="flex-1 min-w-0">
+                <span class="block text-[14.5px] leading-snug font-medium" :class="isDone(h.id) ? 'text-slate-300' : 'text-slate-100'" x-text="h.t"></span>
+                <span class="mt-1.5 flex gap-1.5">
+                  <span x-show="h.core" class="tag tag-ice">CORE</span>
+                  <span class="tag" :class="isDone(h.id) ? 'tag-gold' : ''" x-text="'+' + h.xp + ' XP'"></span>
+                </span>
+              </span>
+            </button>
+          </template>
+        </div>
+      </div>
+    </template>
+
+    <!-- penalties -->
+    <div class="panel !p-4 border-blood/25">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="label !text-blood/90">Accountability · penalty / reset</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">Broke a rule? Log it. Red-marked ones reset the streak.</div>
+        </div>
+      </div>
+      <div class="mt-3 grid grid-cols-2 gap-2">
+        <template x-for="p in penaltyTypes" :key="p.id">
+          <button @click="openPenalty(p)" class="rounded-xl border p-2.5 text-left press" :class="p.streak ? 'border-blood/40 bg-blood/[0.06]' : 'border-line bg-black/30'">
+            <div class="flex items-center justify-between">
+              <span class="text-base" x-text="p.icon"></span>
+              <span class="font-mono text-[11px] font-bold text-blood" x-text="'−' + p.xp"></span>
+            </div>
+            <div class="text-[12px] font-semibold leading-tight mt-1" x-text="p.t"></div>
+            <div x-show="p.streak" class="font-mono text-[9px] text-blood/80 mt-1 tracking-wider">RESETS STREAK</div>
+          </button>
+        </template>
+      </div>
+      <template x-if="selPenalties.length">
+        <div class="mt-3 border-t border-line pt-3 space-y-2">
+          <div class="label">Logged on this day</div>
+          <template x-for="pen in selPenalties" :key="pen.id">
+            <div class="flex items-center gap-3 rounded-lg bg-blood/[0.06] border border-blood/20 px-3 py-2">
+              <div class="flex-1 min-w-0">
+                <div class="text-[13px] font-semibold truncate" x-text="pen.t"></div>
+                <div class="text-[11px] text-slate-500 truncate" x-text="new Date(pen.ts).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + (pen.note ? ' · ' + pen.note : '')"></div>
+              </div>
+              <span class="font-mono text-xs font-bold text-blood" x-text="'−' + pen.xp"></span>
+              <button @click="removePenalty(pen)" class="h-8 w-8 grid place-items-center rounded-md text-slate-500 press" aria-label="Undo penalty">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              </button>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+
+    <button @click="tab = 'mirror'" class="w-full panel press !p-4 flex items-center justify-between text-left">
+      <div>
+        <div class="label">Evening protocol</div>
+        <div class="font-hud text-lg font-bold">Face the Mirror <span class="text-ice text-sm" x-text="selStats.jb ? '✔ +15 XP' : '(+15 XP)'"></span></div>
+      </div>
+      <svg class="h-6 w-6 text-slate-500" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </section>
+
+  <!-- ===================================================== GOALS ===================================================== -->
+  <section x-show="tab === 'goals'" class="space-y-3">
+    <div class="pt-1">
+      <div class="label">Long game</div>
+      <h1 class="font-hud text-[28px] leading-none font-bold tracking-wider mt-1">OBJECTIVES</h1>
+    </div>
+
+    <!-- fund -->
+    <div class="panel hud hud-gold !p-4">
+      <div class="flex items-start justify-between gap-2">
+        <div>
+          <div class="label !text-gold/80">Marriage & Istanbul fund</div>
+          <div class="font-hud text-[34px] leading-none font-bold text-gold glow-gold tabular mt-1.5" x-text="eur(fundTotal)"></div>
+          <div class="font-mono text-[11px] text-slate-400 mt-1">of <span x-text="eur(data.settings.fundTarget)"></span> · <span x-text="fundPct.toFixed(1)"></span>%</div>
+        </div>
+        <div class="text-right">
+          <div class="label">Left</div>
+          <div class="font-hud text-xl font-bold tabular" x-text="eur(fundPace.left)"></div>
+        </div>
+      </div>
+      <div class="mt-3 bar !h-3.5">
+        <i class="gold-fill" :style="'width:' + fundPct + '%'"></i>
+        <template x-for="m in [25, 50, 75]" :key="m"><span class="absolute top-0 bottom-0 w-px bg-black/60" :style="'left:' + m + '%'"></span></template>
+      </div>
+      <div class="mt-3 grid grid-cols-3 gap-2 text-center">
+        <div class="rounded-lg bg-black/40 border border-line py-2"><div class="label !text-[9px] !tracking-widest">Need / week</div><div class="font-hud text-base font-bold tabular" x-text="eur(Math.ceil(fundPace.perWeek))"></div></div>
+        <div class="rounded-lg bg-black/40 border border-line py-2"><div class="label !text-[9px] !tracking-widest">Need / month</div><div class="font-hud text-base font-bold tabular" x-text="eur(Math.ceil(fundPace.perMonth))"></div></div>
+        <div class="rounded-lg bg-black/40 border border-line py-2"><div class="label !text-[9px] !tracking-widest">This month</div><div class="font-hud text-base font-bold text-gold tabular" x-text="eur(fundPace.thisMonth)"></div></div>
+      </div>
+      <div class="mt-2 flex flex-wrap gap-1.5">
+        <template x-for="s in fundBySource" :key="s.s"><span class="tag" x-text="s.s.toUpperCase() + ' ' + eur(s.v)"></span></template>
+      </div>
+
+      <div class="mt-4 border-t border-line pt-4 space-y-2.5">
+        <div class="label">Log money</div>
+        <div class="flex gap-2">
+          <div class="relative flex-1">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 font-hud text-gold font-bold">€</span>
+            <input type="text" inputmode="decimal" x-model="fundForm.amount" placeholder="0" class="field !pl-8 font-hud !text-lg" />
+          </div>
+          <input type="date" x-model="fundForm.date" :max="today" class="field !w-[9.5rem] text-sm" />
+        </div>
+        <div class="grid grid-cols-4 gap-2">
+          <template x-for="v in [10, 20, 50, 100]" :key="v">
+            <button @click="addToAmount(v)" class="h-10 rounded-lg bg-gold/10 border border-gold/25 text-gold font-mono text-xs font-bold press" x-text="'+' + v"></button>
+          </template>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <template x-for="s in fundSources" :key="s">
+            <button @click="fundForm.source = s" class="h-10 rounded-lg text-xs font-bold press border" :class="fundForm.source === s ? 'bg-gold text-obsidian border-gold' : 'bg-black/30 border-line text-slate-300'" x-text="s"></button>
+          </template>
+        </div>
+        <input type="text" x-model="fundForm.note" placeholder="Note (client, order #, gig…)" class="field text-sm" />
+        <div class="flex gap-2">
+          <button @click="fundForm.withdraw = !fundForm.withdraw" class="h-12 px-3 rounded-lg border text-xs font-bold press" :class="fundForm.withdraw ? 'border-blood text-blood bg-blood/10' : 'border-line text-slate-400'" x-text="fundForm.withdraw ? 'WITHDRAW' : 'DEPOSIT'"></button>
+          <button @click="addFund()" class="flex-1 h-12 rounded-lg font-hud font-bold tracking-wider press" :class="fundForm.withdraw ? 'bg-blood text-white' : 'bg-gold text-obsidian'" x-text="fundForm.withdraw ? 'LOG WITHDRAWAL' : 'ADD TO FUND'"></button>
+        </div>
+        <p class="text-[10.5px] text-slate-500">Every €1,000 milestone = +100 XP.</p>
+      </div>
+
+      <template x-if="data.fund.length">
+        <div class="mt-4 border-t border-line pt-3">
+          <div class="label mb-2">Entries</div>
+          <div class="divide-y divide-line">
+            <template x-for="f in fundList" :key="f.id">
+              <div class="flex items-center gap-3 py-2">
+                <div class="flex-1 min-w-0">
+                  <div class="text-[13px] font-semibold"><span x-text="f.source"></span> <span class="text-slate-500 font-normal" x-text="f.note ? '· ' + f.note : ''"></span></div>
+                  <div class="font-mono text-[10px] text-slate-500" x-text="longDate(f.date)"></div>
+                </div>
+                <span class="font-hud font-bold tabular" :class="f.amount < 0 ? 'text-blood' : 'text-gold'" x-text="(f.amount > 0 ? '+' : '') + eur(f.amount)"></span>
+                <button @click="deleteFund(f)" class="h-8 w-8 grid place-items-center rounded-md text-slate-600 press" aria-label="Delete entry">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                </button>
+              </div>
+            </template>
+          </div>
+          <button x-show="data.fund.length > fundLimit" @click="fundLimit += 20" class="mt-2 w-full h-10 rounded-lg border border-line text-xs font-semibold text-slate-400 press">Show more</button>
+        </div>
+      </template>
+    </div>
+
+    <!-- juz -->
+    <div class="panel hud !p-4">
+      <div class="flex items-start justify-between gap-2">
+        <div>
+          <div class="label">Quran · Juz memorized</div>
+          <div class="font-hud text-[34px] leading-none font-bold text-ice glow-ice tabular mt-1.5"><span x-text="juzDone"></span><span class="text-slate-500 text-xl"> / <span x-text="data.settings.juzGoal"></span></span></div>
+          <div class="font-mono text-[11px] text-slate-400 mt-1"><span x-text="juzActive"></span> in progress · <span x-text="Math.round(juzPct)"></span>% of goal</div>
+        </div>
+        <div class="text-right font-hud text-3xl text-ice/70">☾</div>
+      </div>
+      <div class="mt-3 bar"><i class="ice-fill" :style="'width:' + juzPct + '%'"></i></div>
+      <div class="mt-3 grid grid-cols-6 gap-1.5">
+        <template x-for="(v, i) in data.juz" :key="i">
+          <button @click="cycleJuz(i)" class="h-11 rounded-lg border font-hud font-bold text-sm press transition-colors"
+                  :class="v === 2 ? 'bg-ice text-obsidian border-ice' : (v === 1 ? 'bg-gold/15 border-gold/60 text-gold' : 'bg-black/30 border-line text-slate-500')" x-text="i + 1"></button>
+        </template>
+      </div>
+      <div class="mt-2 flex flex-wrap gap-3 font-mono text-[10px] text-slate-500">
+        <span class="flex items-center gap-1"><span class="h-2.5 w-2.5 rounded-sm bg-black/50 border border-line"></span>not started</span>
+        <span class="flex items-center gap-1"><span class="h-2.5 w-2.5 rounded-sm bg-gold/40"></span>in progress</span>
+        <span class="flex items-center gap-1"><span class="h-2.5 w-2.5 rounded-sm bg-ice"></span>memorized (+150 XP)</span>
+      </div>
+      <p class="mt-1.5 text-[10.5px] text-slate-500">Tap a juz to cycle its status.</p>
+    </div>
+
+    <!-- exams -->
+    <div class="panel hud !p-4">
+      <div class="flex items-start justify-between gap-2">
+        <div>
+          <div class="label">University exams passed</div>
+          <div class="font-hud text-[34px] leading-none font-bold tabular mt-1.5"><span class="text-ice glow-ice" x-text="examsPassed"></span><span class="text-slate-500 text-xl"> / <span x-text="data.exams.length"></span></span></div>
+        </div>
+        <div class="text-right font-hud text-3xl text-ice/70">⚙</div>
+      </div>
+      <div class="mt-3 bar"><i class="ice-fill" :style="'width:' + examPct + '%'"></i></div>
+      <div class="mt-3 space-y-2">
+        <template x-for="x in data.exams" :key="x.id">
+          <div class="flex items-center gap-2 rounded-xl border px-2.5 py-2" :class="x.passed ? 'border-ice/40 bg-ice/[0.05]' : 'border-line bg-black/30'">
+            <button @click="toggleExam(x)" class="h-8 w-8 shrink-0 rounded-md border-2 grid place-items-center press" :class="x.passed ? 'bg-ice border-ice text-obsidian' : 'border-slate-600'" :aria-label="x.passed ? 'Mark not passed' : 'Mark passed'">
+              <svg x-show="x.passed" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+            </button>
+            <span class="flex-1 min-w-0 text-[13px] font-semibold leading-tight" :class="x.passed ? 'text-slate-300' : ''" x-text="x.name"></span>
+            <input type="text" x-model="x.grade" placeholder="grade" maxlength="10" class="w-16 h-9 rounded-md bg-black/40 border border-line text-center text-sm font-mono outline-none focus:border-ice" style="font-size: 14px" />
+            <button @click="deleteExam(x)" class="h-8 w-8 grid place-items-center rounded-md text-slate-600 press" aria-label="Remove exam">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+        </template>
+      </div>
+      <div class="mt-3 flex gap-2">
+        <input type="text" x-model="examName" @keydown.enter="addExam()" placeholder="Add exam (e.g. Thermodynamics)" class="field text-sm" />
+        <button @click="addExam()" class="h-12 px-4 rounded-lg bg-ice text-obsidian font-hud font-bold press">ADD</button>
+      </div>
+      <p class="mt-1.5 text-[10.5px] text-slate-500">Each passed exam = +200 XP.</p>
+    </div>
+  </section>
+
+  <!-- ===================================================== MIRROR ===================================================== -->
+  <section x-show="tab === 'mirror'" class="space-y-3">
+    <div class="pt-1">
+      <div class="label">Mental warfare</div>
+      <h1 class="font-hud text-[28px] leading-none font-bold tracking-wider mt-1">THE <span class="text-ice">MIRROR</span></h1>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button @click="shiftSel(-1)" :disabled="!canPrev" class="h-11 w-11 grid place-items-center rounded-lg border border-line bg-panel press disabled:opacity-30" aria-label="Previous day">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="flex-1 text-center">
+        <div class="font-hud text-lg font-bold uppercase tracking-wide" x-text="sel === today ? 'Tonight' : relDay(sel)"></div>
+        <div class="font-mono text-[10.5px] text-slate-500" x-text="fullDate(sel).toUpperCase()"></div>
+      </div>
+      <button @click="shiftSel(1)" :disabled="!canNext" class="h-11 w-11 grid place-items-center rounded-lg border border-line bg-panel press disabled:opacity-30" aria-label="Next day">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
+    <div class="panel hud !p-4 space-y-4">
+      <label class="block">
+        <span class="flex items-center justify-between">
+          <span class="font-hud text-[15px] font-bold uppercase tracking-wide text-ice">What did I conquer today?</span>
+          <span class="font-mono text-[10px] text-slate-500" x-text="jForm.win.length + '/600'"></span>
+        </span>
+        <textarea x-model="jForm.win" @input.debounce.400ms="saveJournal()" @blur="saveJournal()" maxlength="600" rows="4" placeholder="Wins, discipline shown, fears faced…" class="field mt-2 text-[15px]"></textarea>
+      </label>
+      <label class="block">
+        <span class="flex items-center justify-between">
+          <span class="font-hud text-[15px] font-bold uppercase tracking-wide text-gold">Where did I show weakness?</span>
+          <span class="font-mono text-[10px] text-slate-500" x-text="jForm.weak.length + '/600'"></span>
+        </span>
+        <textarea x-model="jForm.weak" @input.debounce.400ms="saveJournal()" @blur="saveJournal()" maxlength="600" rows="4" placeholder="Be brutally honest. Name it to tame it." class="field mt-2 text-[15px]"></textarea>
+      </label>
+      <label class="block">
+        <span class="font-hud text-[15px] font-bold uppercase tracking-wide text-slate-200">Tomorrow's #1 mission</span>
+        <input type="text" x-model="jForm.mission" @input.debounce.400ms="saveJournal()" @blur="saveJournal()" maxlength="140" placeholder="One thing that makes tomorrow a win" class="field mt-2" />
+      </label>
+      <div class="flex items-center justify-between text-[11px]">
+        <span class="text-slate-500">Saves automatically</span>
+        <span class="font-mono font-bold" :class="selStats.jb ? 'text-ice' : 'text-slate-500'" x-text="selStats.jb ? '✔ MIRROR BONUS +15 XP' : 'Answer both for +15 XP'"></span>
+      </div>
+    </div>
+
+    <div class="panel hud hud-gold !p-4">
+      <div class="label !text-gold/80">Winter Arc iron laws</div>
+      <ol class="mt-3 space-y-2.5">
+        <template x-for="(law, i) in ironLaws" :key="i">
+          <li class="flex gap-3">
+            <span class="font-mono text-[11px] font-bold text-gold w-6 shrink-0 pt-0.5" x-text="String(i + 1).padStart(2, '0')"></span>
+            <span class="font-hud text-[15px] leading-snug font-semibold" :class="law === lawOfDay ? 'text-gold' : 'text-slate-200'" x-text="law"></span>
+          </li>
+        </template>
+      </ol>
+    </div>
+
+    <div class="panel !p-0 overflow-hidden">
+      <div class="label px-4 pt-4 pb-2">Archive</div>
+      <template x-if="!journalArchive.length"><p class="px-4 pb-4 text-sm text-slate-500">No reflections yet. Tonight is the first.</p></template>
+      <div class="divide-y divide-line">
+        <template x-for="a in journalArchive" :key="a.k">
+          <button @click="sel = a.k; window.scrollTo({ top: 0, behavior: 'smooth' })" class="w-full text-left px-4 py-3 press" :class="a.k === sel ? 'bg-ice/[0.04]' : ''">
+            <div class="font-mono text-[10.5px] text-slate-500" x-text="longDate(a.k).toUpperCase()"></div>
+            <div x-show="a.j.win.trim()" class="text-[13px] text-slate-200 mt-1 line-clamp-2"><span class="text-ice font-bold">▲ </span><span x-text="a.j.win"></span></div>
+            <div x-show="a.j.weak.trim()" class="text-[13px] text-slate-400 mt-0.5 line-clamp-2"><span class="text-gold font-bold">▼ </span><span x-text="a.j.weak"></span></div>
+          </button>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== SETTINGS ===================================================== -->
+  <section x-show="tab === 'more'" class="space-y-3">
+    <div class="pt-1">
+      <div class="label">System</div>
+      <h1 class="font-hud text-[28px] leading-none font-bold tracking-wider mt-1">SETTINGS</h1>
+    </div>
+
+    <div class="panel !p-4 space-y-3">
+      <div class="label">Operator & timeline</div>
+      <label class="block"><span class="text-[11px] font-semibold text-slate-400">Callsign</span>
+        <input type="text" x-model="data.settings.name" maxlength="24" class="field mt-1" /></label>
+      <label class="block"><span class="text-[11px] font-semibold text-slate-400">Winter Arc start date</span>
+        <input type="date" :value="data.settings.arcStart" :max="today" @change="setStart($event.target.value); $event.target.value = data.settings.arcStart" class="field mt-1" /></label>
+      <div class="grid grid-cols-2 gap-2">
+        <label class="block"><span class="text-[11px] font-semibold text-slate-400">Winter Arc ends</span>
+          <input type="date" :value="data.settings.arcEnd" @change="setDate('arcEnd', $event.target.value); $event.target.value = data.settings.arcEnd" class="field mt-1 text-sm" /></label>
+        <label class="block"><span class="text-[11px] font-semibold text-slate-400">Istanbul / marriage</span>
+          <input type="date" :value="data.settings.goalDate" @change="setDate('goalDate', $event.target.value); $event.target.value = data.settings.goalDate" class="field mt-1 text-sm" /></label>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <label class="block"><span class="text-[11px] font-semibold text-slate-400">Fund target (€)</span>
+          <input type="text" inputmode="decimal" :value="data.settings.fundTarget" @change="setNumber('fundTarget', $event.target.value, 1, 10000000); $event.target.value = data.settings.fundTarget" class="field mt-1" /></label>
+        <label class="block"><span class="text-[11px] font-semibold text-slate-400">Juz goal (1–30)</span>
+          <input type="text" inputmode="numeric" :value="data.settings.juzGoal" @change="setNumber('juzGoal', $event.target.value, 1, 30); $event.target.value = data.settings.juzGoal" class="field mt-1" /></label>
+      </div>
+    </div>
+
+    <div class="panel !p-4 space-y-3">
+      <div class="label">Feedback</div>
+      <template x-for="o in [{ k: 'sound', l: 'Sound effects', d: 'XP chimes, rank-up fanfare, penalty buzz' }, { k: 'vibrate', l: 'Vibration', d: 'Android only — iPhones block web vibration' }]" :key="o.k">
+        <div class="flex items-center justify-between gap-3">
+          <div><div class="text-sm font-semibold" x-text="o.l"></div><div class="text-[11px] text-slate-500" x-text="o.d"></div></div>
+          <button @click="data.settings[o.k] = !data.settings[o.k]" class="relative h-7 w-12 shrink-0 rounded-full transition-colors" :class="data.settings[o.k] ? 'bg-ice' : 'bg-slate-700'" :aria-pressed="data.settings[o.k]">
+            <span class="absolute top-0.5 left-0.5 h-6 w-6 rounded-full bg-white shadow transition-transform" :class="data.settings[o.k] ? 'translate-x-5' : ''"></span>
+          </button>
+        </div>
+      </template>
+    </div>
+
+    <div class="panel !p-4">
+      <div class="label">How XP works</div>
+      <div class="mt-3 space-y-1.5 text-[12.5px]">
+        <div class="flex justify-between"><span class="text-slate-400">13 daily habits (max/day)</span><span class="font-mono font-bold text-ice">+300</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Perfect day (13/13)</span><span class="font-mono font-bold text-gold">+50</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Streak bonus (per streak day, max 30)</span><span class="font-mono font-bold text-ice">+2 × days</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Mirror journal (both answers)</span><span class="font-mono font-bold text-ice">+15</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Juz memorized / exam passed / €1,000</span><span class="font-mono font-bold text-gold">+150 / +200 / +100</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Missed CORE habit (at midnight)</span><span class="font-mono font-bold text-blood">−20 each</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Logged penalties</span><span class="font-mono font-bold text-blood">−30 to −75</span></div>
+      </div>
+      <div class="mt-3 border-t border-line pt-3 grid grid-cols-3 gap-x-2 gap-y-1 font-mono text-[10.5px]">
+        <template x-for="r in [[1,'Drifter'],[5,'Awakened'],[10,'Disciplined'],[15,'Sentinel'],[20,'Monk'],[25,'Ironclad'],[30,'Ghost'],[40,'Warlord'],[50,'Unrecognizable']]" :key="r[0]">
+          <div :class="level.lvl >= r[0] ? 'text-ice' : 'text-slate-600'"><span x-text="'L' + r[0]"></span> <span x-text="r[1]"></span></div>
+        </template>
+      </div>
+      <p class="mt-2 text-[10.5px] text-slate-500">XP is recalculated from your log, so fixing a past day updates everything. Level 50 ≈ 48,000 XP — roughly a near-perfect Winter Arc.</p>
+    </div>
+
+    <div class="panel !p-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="label">Backup & restore</div>
+        <div class="font-mono text-[10px] text-slate-500" x-text="storageSize"></div>
+      </div>
+      <div class="rounded-lg bg-black/40 border border-line p-3 text-[12px] text-slate-400">
+        <b class="text-slate-200" x-text="Object.keys(data.days).length"></b> logged days · <b class="text-slate-200" x-text="data.fund.length"></b> fund entries · last backup:
+        <b :class="data.settings.lastBackup ? 'text-slate-200' : 'text-gold'" x-text="data.settings.lastBackup ? relDay(data.settings.lastBackup.slice(0, 10)) : 'never'"></b>
+      </div>
+      <div class="grid gap-2" :class="canShareFiles ? 'grid-cols-2' : 'grid-cols-1'">
+        <button @click="exportData()" class="h-12 rounded-lg bg-ice text-obsidian font-hud font-bold tracking-wide press">⬇ EXPORT JSON</button>
+        <button x-show="canShareFiles" @click="shareData()" class="h-12 rounded-lg bg-panel border border-line font-hud font-bold tracking-wide press">↗ SHARE</button>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <button @click="openImport('merge')" class="h-12 rounded-lg bg-panel border border-line text-sm font-bold press">⬆ Import (merge)</button>
+        <button @click="openImport('replace')" class="h-12 rounded-lg bg-panel border border-line text-sm font-bold press">⬆ Import (replace)</button>
+      </div>
+      <input type="file" accept="application/json,.json" x-ref="importInput" @change="handleImport($event)" class="hidden" />
+      <p class="text-[10.5px] text-slate-500">Data lives only on this phone. Export every Sunday and keep the file in Google Drive/iCloud.</p>
+    </div>
+
+    <div class="panel !p-4">
+      <div class="label mb-2">Danger zone</div>
+      <button @click="resetAll()" class="w-full h-11 rounded-lg border border-blood/50 text-blood text-sm font-bold press">Erase all data</button>
+    </div>
+    <p class="text-center font-mono text-[10px] text-slate-600 pb-2">WINTER ARC · GHOST PROTOCOL · DATA STAYS ON DEVICE</p>
+  </section>
+</main>
+
+<!-- ============================ BOTTOM NAV ============================ -->
+<nav class="fixed bottom-0 inset-x-0 z-50 bg-obsidian/95 backdrop-blur border-t border-line" style="padding-bottom: env(safe-area-inset-bottom)">
+  <div class="mx-auto max-w-md grid grid-cols-5 h-16">
+    <template x-for="n in [
+        { k: 'hq', l: 'HQ', p: 'M12 2l9 5v6c0 5-4 8.5-9 9-5-.5-9-4-9-9V7z' },
+        { k: 'today', l: 'Today', p: 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9' },
+        { k: 'goals', l: 'Goals', p: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z' },
+        { k: 'mirror', l: 'Mirror', p: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14zM20 17v4H6.5a2.5 2.5 0 0 1 0-5' },
+        { k: 'more', l: 'System', p: 'M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6' }]" :key="n.k">
+      <button @click="tab = n.k; if (n.k === 'today' || n.k === 'mirror') { if (sel > today) sel = today; }" class="relative flex flex-col items-center justify-center gap-1 press" :class="tab === n.k ? 'text-ice' : 'text-slate-500'">
+        <span x-show="tab === n.k" class="absolute top-0 h-0.5 w-8 bg-ice shadow-[0_0_10px_#38BDF8]"></span>
+        <span class="relative">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path :d="n.p"/></svg>
+          <span x-show="n.k === 'today' && stats.days[today] && stats.days[today].coreDone < 5" class="absolute -top-0.5 -right-1 h-2 w-2 rounded-full bg-gold blink"></span>
+        </span>
+        <span class="font-hud text-[10px] font-bold tracking-widest uppercase" x-text="n.l"></span>
+      </button>
+    </template>
+  </div>
+</nav>
+
+<!-- ============================ PENALTY MODAL ============================ -->
+<div x-cloak x-show="modal === 'penalty'" x-transition.opacity class="fixed inset-0 z-[70] flex items-end sm:items-center justify-center">
+  <div class="absolute inset-0 bg-black/80" @click="modal = null"></div>
+  <template x-if="penaltyDraft.type">
+    <div class="relative w-full max-w-md rounded-t-3xl sm:rounded-3xl bg-[#0B0B14] border border-blood/40 p-5" style="padding-bottom: calc(1.25rem + env(safe-area-inset-bottom))">
+      <div class="label !text-blood">Penalty · <span x-text="longDate(sel)"></span></div>
+      <div class="mt-2 flex items-center gap-3">
+        <span class="text-3xl" x-text="penaltyDraft.type.icon"></span>
+        <div class="flex-1 font-hud text-xl font-bold leading-tight" x-text="penaltyDraft.type.t"></div>
+        <div class="font-hud text-3xl font-bold text-blood" x-text="'−' + penaltyDraft.type.xp"></div>
+      </div>
+      <div x-show="penaltyDraft.type.streak" class="mt-3 rounded-lg bg-blood/10 border border-blood/30 px-3 py-2 text-[12px] text-blood font-semibold">
+        This breaks a dopamine rule. Your Monk Mode streak (<span x-text="stats.streak"></span> days) resets to 0.
+      </div>
+      <label class="block mt-3"><span class="text-[11px] font-semibold text-slate-400">What triggered it? (optional — helps you spot patterns)</span>
+        <input type="text" x-model="penaltyDraft.note" maxlength="140" placeholder="Bored after class, 23:40, in bed…" class="field mt-1" /></label>
+      <div class="mt-4 grid grid-cols-2 gap-2">
+        <button @click="modal = null" class="h-12 rounded-lg bg-panel border border-line font-bold text-sm press">Cancel</button>
+        <button @click="applyPenalty()" class="h-12 rounded-lg bg-blood text-white font-hud font-bold tracking-wide press">ACCEPT PENALTY</button>
+      </div>
+      <p class="mt-3 text-center text-[11px] text-slate-500 italic">Owning it is the first rep of getting stronger.</p>
+    </div>
+  </template>
+</div>
+
+<!-- ============================ CONFIRM ============================ -->
+<div x-cloak x-show="modal === 'confirm'" x-transition.opacity class="fixed inset-0 z-[80] grid place-items-center px-6">
+  <div class="absolute inset-0 bg-black/80" @click="modal = null"></div>
+  <div class="relative w-full max-w-sm rounded-2xl bg-[#0B0B14] border border-line p-5">
+    <h3 class="font-hud text-xl font-bold uppercase tracking-wide" x-text="confirmBox.title"></h3>
+    <p class="text-sm text-slate-400 mt-2 leading-relaxed" x-text="confirmBox.text"></p>
+    <div class="grid grid-cols-2 gap-2 mt-5">
+      <button @click="modal = null" class="h-12 rounded-lg bg-panel border border-line font-bold text-sm press">Cancel</button>
+      <button @click="confirmOk()" class="h-12 rounded-lg font-bold text-sm press" :class="confirmBox.danger ? 'bg-blood text-white' : 'bg-ice text-obsidian'" x-text="confirmBox.okText"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ RANK UP ============================ -->
+<div x-cloak x-show="modal === 'rankup'" x-transition.opacity class="fixed inset-0 z-[85] grid place-items-center px-6">
+  <div class="absolute inset-0 bg-black/90"></div>
+  <template x-if="rankUp">
+    <div class="relative w-full max-w-sm text-center pop">
+      <div class="label !text-gold" x-text="rankUp.newRank ? 'New rank unlocked' : 'Level up'"></div>
+      <div class="mt-3 font-hud text-[88px] leading-none font-bold text-ice glow-ice" x-text="rankUp.lvl"></div>
+      <div class="font-hud text-[34px] font-bold uppercase tracking-wider mt-2" :class="rankUp.newRank ? 'shine' : 'text-white'" x-text="rankUp.rank"></div>
+      <p class="mt-3 text-sm text-slate-400" x-text="rankUp.newRank ? 'The old you would not recognize this one.' : 'Keep stacking days.'"></p>
+      <button @click="modal = null" class="mt-6 w-full h-14 rounded-xl bg-gold text-obsidian font-hud text-lg font-bold tracking-widest press">CONTINUE</button>
+    </div>
+  </template>
+</div>
+
+<!-- ============================ DAILY VERDICT ============================ -->
+<div x-cloak x-show="modal === 'verdict'" x-transition.opacity class="fixed inset-0 z-[85] grid place-items-center px-5">
+  <div class="absolute inset-0 bg-black/90"></div>
+  <template x-if="verdict">
+    <div class="relative w-full max-w-sm panel hud !p-5" :class="verdict.st.holds ? '' : 'hud-gold'">
+      <div class="label" x-text="'Verdict · ' + longDate(verdict.date)"></div>
+      <div class="mt-2 flex items-end justify-between">
+        <div class="font-hud text-5xl font-bold tabular" :class="verdict.st.pct === 1 ? 'text-gold glow-gold' : 'text-white'" x-text="Math.round(verdict.st.pct * 100) + '%'"></div>
+        <div class="text-right">
+          <div class="label">Net</div>
+          <div class="font-hud text-3xl font-bold tabular" :class="verdict.st.net < 0 ? 'text-blood' : 'text-ice'" x-text="signed(verdict.st.net) + ' XP'"></div>
+        </div>
+      </div>
+      <div class="mt-3 space-y-1 font-mono text-[11.5px]">
+        <div class="flex justify-between"><span class="text-slate-400">Habits</span><span class="text-slate-200" x-text="'+' + verdict.st.earned"></span></div>
+        <div class="flex justify-between" x-show="verdict.st.perfect + verdict.st.jb + verdict.st.streakBonus"><span class="text-slate-400">Bonuses</span><span class="text-ice" x-text="'+' + (verdict.st.perfect + verdict.st.jb + verdict.st.streakBonus)"></span></div>
+        <div class="flex justify-between" x-show="verdict.st.penXp"><span class="text-slate-400">Penalties logged</span><span class="text-blood" x-text="'−' + verdict.st.penXp"></span></div>
+        <div class="flex justify-between" x-show="verdict.st.auto"><span class="text-slate-400" x-text="'Missed core (' + (5 - verdict.st.coreDone) + ')'"></span><span class="text-blood" x-text="'−' + verdict.st.auto"></span></div>
+        <div class="flex justify-between border-t border-line pt-1 mt-1"><span class="text-slate-400">Monk mode streak</span>
+          <span :class="verdict.st.holds ? 'text-ice' : 'text-blood'" x-text="verdict.st.holds ? verdict.st.streak + ' days — held' : 'BROKEN → 0'"></span></div>
+      </div>
+      <p class="mt-4 font-hud text-lg leading-snug font-semibold" x-text="verdictLine(verdict.st)"></p>
+      <div class="mt-5 grid grid-cols-2 gap-2">
+        <button @click="closeVerdict(); openDay(verdict.date)" class="h-12 rounded-lg bg-panel border border-line text-sm font-bold press">Fix yesterday</button>
+        <button @click="closeVerdict(); sel = today; tab = 'today'" class="h-12 rounded-lg bg-ice text-obsidian font-hud font-bold tracking-wide press">ATTACK TODAY</button>
+      </div>
+    </div>
+  </template>
+</div>
+
+<!-- ============================ ALL LAWS ============================ -->
+<div x-cloak x-show="modal === 'laws'" x-transition.opacity class="fixed inset-0 z-[80] flex items-end justify-center">
+  <div class="absolute inset-0 bg-black/80" @click="modal = null"></div>
+  <div class="relative w-full max-w-md max-h-[85vh] overflow-y-auto rounded-t-3xl bg-[#0B0B14] border-t border-gold/40 p-5" style="padding-bottom: calc(1.25rem + env(safe-area-inset-bottom))">
+    <div class="flex items-center justify-between">
+      <div class="font-hud text-2xl font-bold tracking-wider text-gold">IRON LAWS</div>
+      <button @click="modal = null" class="h-10 w-10 grid place-items-center rounded-lg bg-panel border border-line press" aria-label="Close">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <ol class="mt-4 space-y-3">
+      <template x-for="(law, i) in ironLaws" :key="i">
+        <li class="flex gap-3">
+          <span class="font-mono text-[11px] font-bold text-gold w-6 shrink-0 pt-0.5" x-text="String(i + 1).padStart(2, '0')"></span>
+          <span class="font-hud text-base leading-snug font-semibold" :class="law === lawOfDay ? 'text-gold' : 'text-slate-200'" x-text="law"></span>
+        </li>
+      </template>
+    </ol>
+  </div>
+</div>
+
+</body>
+</html>
